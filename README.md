@@ -36,6 +36,7 @@ Simplemente abre `AGROMARGEN_2026-27.html` en cualquier navegador moderno. No re
 - SheetJS (Excel)
 - Google Fonts (Manrope)
 
-## Autor
+## Autores
 
-Rodrigo Quiñonez
+- Rodrigo Quiñonez
+- Claudio Razquin
