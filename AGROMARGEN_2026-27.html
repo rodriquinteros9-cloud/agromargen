@@ -416,6 +416,22 @@ table.ct td.cedit:focus-within{background:#9dd8f9}
 .be-mx td.mxh{background:#eff6ff;font-weight:700;color:#1d4ed8;text-align:right;padding-right:6px;white-space:nowrap}
 .be-mx tr:hover td{filter:brightness(.97)}
 .be-wf-bar{transition:all .3s ease}
+
+/* CUSTOM COSTS EDITOR STYLING */
+#customCostsView{animation:fadeSlideUp 0.3s ease-out}
+#customCostsView fieldset{margin:0;padding:0;border:none}
+#customCostsView input,#customCostsView select{font-family:'Manrope',sans-serif}
+#customCostsView input:focus,#customCostsView select:focus{outline:none;border-color:var(--brand);box-shadow:0 0 0 3px rgba(47,91,55,.1)}
+#customCostsView .custom-insumo-row:hover,#customCostsView .custom-labor-row:hover{background:#fbfcf9;box-shadow:0 2px 8px rgba(0,0,0,.04)}
+#customCostsView input[readonly]{cursor:not-allowed;opacity:0.8}
+#customCostsView .deleteRow:hover{background:var(--bad);color:#fff;transform:scale(1.05)}
+#customCostsView .deleteRow:active{transform:scale(0.95)}
+#customCostsView .btn{transition:all var(--transition-fast)}
+#customCostsView .btn:hover{transform:translateY(-2px)}
+#customCostsView .btn.green{background:var(--ok);color:#fff;border:none}
+#customCostsView .btn.green:hover{background:#0d7a50;box-shadow:var(--shadow-sm)}
+#customCostsView input[type="number"]::-webkit-outer-spin-button,#customCostsView input[type="number"]::-webkit-inner-spin-button{-webkit-appearance:none;margin:0}
+#customCostsView input[type="number"]{-moz-appearance:textfield}
 </style>
 </head>
 <body>
@@ -590,6 +606,7 @@ table.ct td.cedit:focus-within{background:#9dd8f9}
     <button class="btn" onclick="goHome()" style="font-size:10px;padding:6px 10px">🏠 Inicio</button>
     <button class="btn red" onclick="resetScenarioBase()" style="font-size:10px;padding:6px 10px">↺ Esc. Base</button>
     <button class="btn blue present-hide" onclick="openAdv()" style="font-size:10px;padding:6px 10px">✏️ Costos</button>
+    <button class="btn present-hide" id="btnCustomCosts" onclick="goToCustomCostsEditor(getCurrentCrop())" style="font-size:10px;padding:6px 10px">📋 Mis Costos</button>
     <button class="btn" onclick="openSaveScenarioModal()" style="font-size:10px;padding:6px 10px">💾 Guardar</button>
     <button class="btn" onclick="openLoadScenarioModal()" style="font-size:10px;padding:6px 10px">📂 Cargar</button>
   </div>
@@ -5109,6 +5126,36 @@ function goBackFromCustomCosts() {
   if (homeScreen) homeScreen.style.display = 'block';
 }
 
+function getCurrentCrop() {
+  // Get crop selection from user
+  const crops = ['s1', 'ts', 'tr', 'mt', 'mtard', 'sor', 'gir'];
+  const cropLabels = ['Soja 1°', 'Trigo+Soja 2°', 'Trigo', 'Maíz Temp.', 'Maíz Tardío', 'Sorgo', 'Girasol'];
+  
+  // Create selection dialog
+  const dialog = document.createElement('div');
+  dialog.style.cssText = 'position: fixed; top: 0; left: 0; right: 0; bottom: 0; background: rgba(0,0,0,.5); display: flex; align-items: center; justify-content: center; z-index: 9999;';
+  dialog.innerHTML = `
+    <div style="background: #fff; border-radius: 12px; padding: 24px; max-width: 400px; width: 90%; box-shadow: var(--shadow-lg);">
+      <h3 style="margin: 0 0 16px 0; color: var(--ink); font-size: 16px;">Selecciona cultivo para anotar costos</h3>
+      <div style="display: grid; gap: 8px;">
+        ${crops.map((crop, idx) => `
+          <button onclick="selectCropForCustomCosts('${crop}'); this.closest('div').parentElement.remove()" style="padding: 12px; text-align: left; border: 1px solid var(--line); background: #fff; border-radius: 8px; cursor: pointer; transition: all 0.15s;">
+            <strong>${cropLabels[idx]}</strong>
+          </button>
+        `).join('')}
+      </div>
+    </div>
+  `;
+  document.body.appendChild(dialog);
+  
+  // Return dummy value (actual value set by selectCropForCustomCosts)
+  return 's1';
+}
+
+function selectCropForCustomCosts(crop) {
+  goToCustomCostsEditor(crop);
+}
+
 function clearCustomCostsForm() {
   document.getElementById('herbicidasContainer').innerHTML = '';
   document.getElementById('insecticidasContainer').innerHTML = '';
@@ -5313,17 +5360,100 @@ document.addEventListener('DOMContentLoaded', () => {
   });
 });
 
-/* ===== SAVE & EXPORT FUNCTIONS (STUBS) ===== */
+/* ===== SAVE & EXPORT FUNCTIONS ===== */
+function validateCustomCostsData() {
+  if (!currentCustomCostsScenario) return { valid: false, errors: ['No hay escenario cargado'] };
+  
+  const errors = [];
+  
+  // Validate herbicidas
+  currentCustomCostsScenario.insumos.herbicidas.forEach((row, idx) => {
+    if (!row.nombre || row.nombre.trim() === '') errors.push(`Herbicida fila ${idx + 1}: Nombre requerido`);
+    if (!row.tipo || row.tipo.trim() === '') errors.push(`Herbicida fila ${idx + 1}: Tipo requerido`);
+    if (isNaN(row.cantidad) || row.cantidad < 0) errors.push(`Herbicida fila ${idx + 1}: Cantidad inválida`);
+    if (isNaN(row.valorUSD) || row.valorUSD < 0) errors.push(`Herbicida fila ${idx + 1}: Valor USD inválido`);
+  });
+  
+  // Validate insecticidas
+  currentCustomCostsScenario.insumos.insecticidas.forEach((row, idx) => {
+    if (!row.nombre || row.nombre.trim() === '') errors.push(`Insecticida fila ${idx + 1}: Nombre requerido`);
+    if (!row.tipo || row.tipo.trim() === '') errors.push(`Insecticida fila ${idx + 1}: Tipo requerido`);
+    if (isNaN(row.cantidad) || row.cantidad < 0) errors.push(`Insecticida fila ${idx + 1}: Cantidad inválida`);
+    if (isNaN(row.valorUSD) || row.valorUSD < 0) errors.push(`Insecticida fila ${idx + 1}: Valor USD inválido`);
+  });
+  
+  // Validate fertilizantes
+  currentCustomCostsScenario.insumos.fertilizantes.forEach((row, idx) => {
+    if (!row.nombre || row.nombre.trim() === '') errors.push(`Fertilizante fila ${idx + 1}: Nombre requerido`);
+    if (!row.tipo || row.tipo.trim() === '') errors.push(`Fertilizante fila ${idx + 1}: Tipo requerido`);
+    if (isNaN(row.cantidad) || row.cantidad < 0) errors.push(`Fertilizante fila ${idx + 1}: Cantidad inválida`);
+    if (isNaN(row.valorUSD) || row.valorUSD < 0) errors.push(`Fertilizante fila ${idx + 1}: Valor USD inválido`);
+  });
+  
+  // Validate labores
+  currentCustomCostsScenario.labores.forEach((row, idx) => {
+    if (!row.tarea || row.tarea.trim() === '') errors.push(`Labor fila ${idx + 1}: Tarea requerida`);
+    if (isNaN(row.cantidad) || row.cantidad < 0) errors.push(`Labor fila ${idx + 1}: Cantidad inválida`);
+    if (isNaN(row.precioUnitario) || row.precioUnitario < 0) errors.push(`Labor fila ${idx + 1}: Precio unitario inválido`);
+  });
+  
+  return { valid: errors.length === 0, errors };
+}
+
 function saveCustomCostsScenario() {
   if (!currentCustomCostsCrop || !currentCustomCostsScenario) return;
   
-  const name = prompt('Nombre del escenario:', currentCustomCostsScenario.name);
-  if (!name) return;
+  // Validate data first
+  const validation = validateCustomCostsData();
+  if (!validation.valid) {
+    const errorMsg = validation.errors.slice(0, 3).join('\n') + (validation.errors.length > 3 ? `\n... y ${validation.errors.length - 3} errores más` : '');
+    showToast('✕ Errores en formulario:\n' + errorMsg, 'error', 4000);
+    return;
+  }
+  
+  // Show save dialog
+  const dialog = document.createElement('div');
+  dialog.style.cssText = 'position: fixed; top: 0; left: 0; right: 0; bottom: 0; background: rgba(0,0,0,.5); display: flex; align-items: center; justify-content: center; z-index: 9999;';
+  dialog.innerHTML = `
+    <div style="background: #fff; border-radius: 12px; padding: 24px; max-width: 400px; width: 90%; box-shadow: var(--shadow-lg);">
+      <h3 style="margin: 0 0 16px 0; color: var(--ink); font-size: 16px;">Guardar Costos Personalizados</h3>
+      <label style="display: block; margin-bottom: 12px;">
+        <span style="display: block; font-size: 11px; color: var(--ink-soft); margin-bottom: 6px; font-weight: 600;">Nombre del escenario:</span>
+        <input type="text" id="scenarioNameInput" value="${currentCustomCostsScenario.name}" style="width: 100%; padding: 10px; border: 1px solid var(--line); border-radius: 6px; box-sizing: border-box; font-size: 12px;" />
+      </label>
+      <div style="display: flex; gap: 12px; justify-content: flex-end; margin-top: 20px;">
+        <button onclick="this.closest('div').parentElement.remove()" class="btn" style="padding: 10px 18px; border: 1px solid var(--line); background: #fff; color: var(--ink); cursor: pointer;">Cancelar</button>
+        <button onclick="confirmSaveScenario()" class="btn green" style="padding: 10px 24px; background: var(--ok); color: #fff; border: none; cursor: pointer; font-weight: 600;">Guardar</button>
+      </div>
+    </div>
+  `;
+  document.body.appendChild(dialog);
+  
+  const input = dialog.querySelector('#scenarioNameInput');
+  input.focus();
+  input.select();
+}
+
+function confirmSaveScenario() {
+  const input = document.querySelector('#scenarioNameInput');
+  if (!input) return;
+  
+  const name = input.value.trim();
+  if (!name) {
+    showToast('✕ El nombre del escenario no puede estar vacío', 'error', 2000);
+    return;
+  }
   
   currentCustomCostsScenario.name = name;
-  currentCustomCostsScenario.lastModified = new ISO8601.toDateString();
+  currentCustomCostsScenario.lastModified = new Date().toISOString();
   
   const result = customCosts.saveScenario(currentCustomCostsCrop, currentCustomCostsScenario);
+  
+  // Close dialog
+  document.querySelectorAll('div').forEach(d => {
+    if (d.innerHTML.includes('Guardar Costos Personalizados')) d.parentElement.remove();
+  });
+  
   if (result.success) {
     showToast('✓ Costos guardados exitosamente', 'success', 3000);
   } else {
@@ -5333,8 +5463,97 @@ function saveCustomCostsScenario() {
 
 function exportCustomCostsToPDF() {
   if (!currentCustomCostsScenario) return;
-  // TODO: Implement PDF export using jsPDF
-  showToast('Funcionalidad de exportación en desarrollo', 'info', 2000);
+  
+  try {
+    const doc = new jsPDF.jsPDF();
+    const pageWidth = doc.internal.pageSize.getWidth();
+    const pageHeight = doc.internal.pageSize.getHeight();
+    let yPos = 10;
+    
+    // Header
+    doc.setFontSize(16);
+    doc.setTextColor(47, 91, 55);
+    doc.text('COSTOS PERSONALIZADOS', 10, yPos);
+    yPos += 8;
+    
+    // Metadata
+    doc.setFontSize(10);
+    doc.setTextColor(80, 97, 114);
+    doc.text(`Cultivo: ${currentCustomCostsCrop.toUpperCase()}`, 10, yPos);
+    yPos += 5;
+    doc.text(`Escenario: ${currentCustomCostsScenario.name}`, 10, yPos);
+    yPos += 5;
+    doc.text(`Fecha: ${new Date(currentCustomCostsScenario.lastModified).toLocaleDateString('es-AR')}`, 10, yPos);
+    yPos += 10;
+    
+    // Insumos section
+    const insumoData = [];
+    currentCustomCostsScenario.insumos.herbicidas.forEach(row => {
+      insumoData.push([row.nombre, row.tipo, row.cantidad.toFixed(2), row.valorUSD.toFixed(2), row.costoUSD.toFixed(2)]);
+    });
+    currentCustomCostsScenario.insumos.insecticidas.forEach(row => {
+      insumoData.push([row.nombre, row.tipo, row.cantidad.toFixed(2), row.valorUSD.toFixed(2), row.costoUSD.toFixed(2)]);
+    });
+    currentCustomCostsScenario.insumos.fertilizantes.forEach(row => {
+      insumoData.push([row.nombre, row.tipo, row.cantidad.toFixed(2), row.valorUSD.toFixed(2), row.costoUSD.toFixed(2)]);
+    });
+    
+    doc.autoTable({
+      head: [['Nombre', 'Tipo', 'Cantidad', 'USD/un', 'Costo']],
+      body: insumoData,
+      startY: yPos,
+      margin: 10,
+      styles: { fontSize: 9 },
+      headStyles: { fillColor: [47, 91, 55], textColor: [255, 255, 255] }
+    });
+    
+    yPos = doc.lastAutoTable.finalY + 5;
+    
+    // Labores section
+    if (currentCustomCostsScenario.labores.length > 0) {
+      const laborData = currentCustomCostsScenario.labores.map(row => [
+        row.tarea,
+        row.cantidad.toFixed(2),
+        row.precioUnitario.toFixed(2),
+        row.costoUSD.toFixed(2)
+      ]);
+      
+      doc.autoTable({
+        head: [['Tarea', 'Cantidad', 'Precio unit.', 'Costo']],
+        body: laborData,
+        startY: yPos,
+        margin: 10,
+        styles: { fontSize: 9 },
+        headStyles: { fillColor: [47, 91, 55], textColor: [255, 255, 255] }
+      });
+      
+      yPos = doc.lastAutoTable.finalY + 5;
+    }
+    
+    // Totals section
+    doc.setFontSize(11);
+    doc.setTextColor(47, 91, 55);
+    doc.text('RESUMEN DE COSTOS', 10, yPos);
+    yPos += 6;
+    
+    doc.setFontSize(10);
+    doc.setTextColor(80, 97, 114);
+    doc.text(`Total Insumos: ${currentCustomCostsScenario.totales.insumos.toFixed(2)} us$/ha`, 10, yPos);
+    yPos += 5;
+    doc.text(`Total Labores: ${currentCustomCostsScenario.totales.labores.toFixed(2)} us$/ha`, 10, yPos);
+    yPos += 5;
+    doc.text(`Total Gastos Directos: ${currentCustomCostsScenario.totales.gastosDirectos.toFixed(2)} us$/ha`, 10, yPos);
+    yPos += 5;
+    doc.text(`TOTAL GASTOS: ${currentCustomCostsScenario.totales.totalGastos.toFixed(2)} us$/ha`, 10, yPos);
+    
+    // Save
+    const filename = `Costos_${currentCustomCostsCrop}_${new Date().toISOString().split('T')[0]}.pdf`;
+    doc.save(filename);
+    showToast('✓ PDF generado exitosamente', 'success', 2000);
+  } catch (err) {
+    console.error('Error exporting PDF:', err);
+    showToast('✕ Error al generar PDF: ' + err.message, 'error', 3000);
+  }
 }
 
  init();
