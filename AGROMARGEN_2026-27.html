@@ -12,7 +12,6 @@
 <script src="https://cdn.jsdelivr.net/npm/chartjs-plugin-annotation@3.0.1/dist/chartjs-plugin-annotation.min.js"></script>
 <script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf/2.5.1/jspdf.umd.min.js"></script>
 <script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf-autotable/3.8.2/jspdf.plugin.autotable.min.js"></script>
-<script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
 <style>
 :root{
   --ink:#15202b;
@@ -417,76 +416,10 @@ table.ct td.cedit:focus-within{background:#9dd8f9}
 .be-mx td.mxh{background:#eff6ff;font-weight:700;color:#1d4ed8;text-align:right;padding-right:6px;white-space:nowrap}
 .be-mx tr:hover td{filter:brightness(.97)}
 .be-wf-bar{transition:all .3s ease}
-
-/* AUTH SCREEN */
-#authScreen{
-  position:fixed;inset:0;background:radial-gradient(circle at 12% 8%,#f4f8ef 0,#eef4e8 34%,#f5f7f2 68%,#f7f8f4 100%);
-  display:flex;align-items:center;justify-content:center;z-index:10000;font-family:'Manrope',sans-serif;
-}
-.auth-card{
-  background:var(--surface);width:400px;max-width:90%;border-radius:var(--radius-lg);box-shadow:var(--shadow-lg);
-  border:1px solid #dbe4ec;overflow:hidden;animation:scaleIn 0.4s ease-out;
-}
-.auth-hdr{
-  background:linear-gradient(135deg,var(--brand) 0%,var(--brand-2) 100%);color:#fff;padding:30px 20px;text-align:center;
-}
-.auth-hdr h2{font-size:22px;font-weight:800;margin-bottom:8px;letter-spacing:-0.5px}
-.auth-hdr p{font-size:13px;opacity:.9;line-height:1.5}
-.auth-body{padding:24px;display:flex;flex-direction:column;gap:16px}
-.auth-field{display:flex;flex-direction:column;gap:6px}
-.auth-field label{font-size:11px;font-weight:700;color:var(--ink-soft);text-transform:uppercase;letter-spacing:.5px}
-.auth-field input{
-  padding:10px 12px;border-radius:8px;border:1px solid #b5c5d3;font-size:13px;font-weight:500;transition:all var(--transition-fast);
-}
-.auth-field input:focus{outline:none;border-color:var(--brand);box-shadow:0 0 0 3px rgba(47,91,55,.1)}
-.auth-btn{
-  padding:12px;font-size:13px;font-weight:700;border-radius:8px;cursor:pointer;transition:all var(--transition-med);
-  border:1px solid transparent;text-align:center;
-}
-.auth-btn.primary{background:var(--brand);color:#fff}
-.auth-btn.primary:hover{background:#1e4225;transform:translateY(-2px);box-shadow:var(--shadow-sm)}
-.auth-btn.google{
-  background:#fff;color:#444;border:1px solid #dbe4ec;display:flex;align-items:center;justify-content:center;gap:10px;
-}
-.auth-btn.google:hover{background:#f9fafb;border-color:#ccc;transform:translateY(-2px)}
-.auth-footer{
-  padding:16px;text-align:center;background:#f8fafc;border-top:1px solid #edf2f7;font-size:12px;color:var(--ink-soft);
-}
-.auth-footer span{cursor:pointer;color:var(--brand);font-weight:700;transition:color var(--transition-fast)}
-.auth-footer span:hover{color:#1e4225;text-decoration:underline}
 </style>
 </head>
 <body>
 <div class="toast-container" id="toastContainer"></div>
-
-<div id="authScreen">
-  <div class="auth-card">
-    <div class="auth-hdr">
-      <h2>AGROMARGEN</h2>
-      <p id="authSubtitle">Ingresá para gestionar tus escenarios agrícolas</p>
-    </div>
-    <div class="auth-body">
-      <div class="auth-field">
-        <label>Correo Electrónico</label>
-        <input type="email" id="authEmail" placeholder="nombre@ejemplo.com">
-      </div>
-      <div class="auth-field">
-        <label>Contraseña</label>
-        <input type="password" id="authPass" placeholder="••••••••">
-      </div>
-      <button class="auth-btn primary" id="btnAuthMain" onclick="handleAuthMain()">Iniciar Sesión</button>
-      <div style="text-align:center;font-size:11px;color:#94a3b8;margin:4px 0">o</div>
-      <button class="auth-btn google" onclick="signInWithGoogle()">
-        <img src="https://www.gstatic.com/firebasejs/ui/2.0.0/images/auth/google.svg" width="16" height="16">
-        Continuar con Google
-      </button>
-    </div>
-    <div class="auth-footer">
-      <span id="authToggle" onclick="toggleAuthMode()">¿No tenés cuenta? Registrate aquí</span>
-    </div>
-  </div>
-</div>
-
 <div class="home-wrap" id="homeScreen">
   <div class="home-hero">
     <div>
@@ -659,7 +592,6 @@ table.ct td.cedit:focus-within{background:#9dd8f9}
     <button class="btn blue present-hide" onclick="openAdv()" style="font-size:10px;padding:6px 10px">✏️ Costos</button>
     <button class="btn" onclick="openSaveScenarioModal()" style="font-size:10px;padding:6px 10px">💾 Guardar</button>
     <button class="btn" onclick="openLoadScenarioModal()" style="font-size:10px;padding:6px 10px">📂 Cargar</button>
-    <button class="btn red" onclick="handleSignOut()" style="font-size:10px;padding:6px 10px">🚪 Salir</button>
   </div>
 </div>
 
@@ -2155,124 +2087,19 @@ function openSaveScenarioModal(){
 }
 function closeSaveScenarioModal(){document.getElementById('saveScenarioModal').classList.remove('show');}
 function openLoadScenarioModal(){
-  loadScenariosFromCloud();
+  buildSavedScenariosList();
   document.getElementById('loadScenarioModal').classList.add('show');
 }
 function closeLoadScenarioModal(){document.getElementById('loadScenarioModal').classList.remove('show');}
-
-async function loadScenariosFromCloud(){
-  const list=document.getElementById('savedScenariosList');
-  const { data: { session } } = await supabase.auth.getSession();
-  
-  if(session){
-    try {
-      const { data: scenarios, error } = await supabase
-        .from('scenarios')
-        .select('*')
-        .order('created_at', { ascending: false });
-      
-      if(error) throw error;
-      
-      if(scenarios && scenarios.length > 0){
-        list.innerHTML = scenarios.map((s, i) => `<div style="display:flex;align-items:center;gap:10px;padding:10px;background:${i%2==0?'#f8f9fa':'#fff'};border-radius:6px;margin-bottom:4px">
-          <div style="flex:1;cursor:pointer;padding:8px" onclick="loadCloudScenario('${s.id}')">
-            <div style="font-size:12px;font-weight:700;color:#1f5c2e">${s.scenario_name}</div>
-            <div style="font-size:10px;color:#888">${new Date(s.created_at).toLocaleDateString('es-AR')} · ${s.data?.cur || '—'}</div>
-          </div>
-          <button class="btn red" style="padding:4px 8px;font-size:10px" onclick="deleteCloudScenario('${s.id}')">🗑</button>
-        </div>`).join('');
-        return;
-      }
-    } catch(e) {
-      console.error('Error loading cloud scenarios:', e);
-    }
-  }
-  
-  // Fallback to localStorage
-  const saved=getSavedScenarios();
-  if(saved.length===0){list.innerHTML='<div style="padding:20px;text-align:center;color:#888">No hay escenarios guardados</div>';return;}
-  list.innerHTML=saved.map((s,i)=>`<div style="display:flex;align-items:center;gap:10px;padding:10px;background:${i%2==0?'#f8f9fa':'#fff'};border-radius:6px;margin-bottom:4px">
-    <div style="flex:1;cursor:pointer;padding:8px" onclick="loadScenario(${i})">
-      <div style="font-size:12px;font-weight:700;color:#1f5c2e">${s.name}</div>
-      <div style="font-size:10px;color:#888">${s.date} · ${s.cur}</div>
-    </div>
-    <button class="btn red" style="padding:4px 8px;font-size:10px" onclick="deleteScenario(${i})">🗑</button>
-  </div>`).join('');
-}
-
-async function loadCloudScenario(id){
-  try {
-    const { data, error } = await supabase
-      .from('scenarios')
-      .select('*')
-      .eq('id', id)
-      .single();
-    
-    if(error) throw error;
-    if(!data) return;
-    
-    const s = data.data;
-    cur = s.cur || 'San Justo';
-    if(s.PR) PR = {...s.PR};
-    if(s.producerName) producerName = s.producerName;
-    if(s.establishmentName) establishmentName = s.establishmentName;
-    if(s.advCosts) advCosts = s.advCosts;
-    if(s.advFlete) advFlete = s.advFlete;
-    if(s.advKm) advKm = s.advKm;
-    if(s.advArr) advArr = s.advArr;
-    if(s.advArrByCrop) advArrByCrop = s.advArrByCrop;
-    if(s.ur) ur = {...s.ur};
-    
-    closeLoadScenarioModal();
-    render();
-    showToast(`Escenario "${data.scenario_name}" cargado desde la nube`,'success');
-  } catch(e) {
-    showToast(e.message, 'error');
-  }
-}
-
-async function deleteCloudScenario(id){
-  if(!confirm('Eliminar este escenario de la nube?')) return;
-  try {
-    const { error } = await supabase
-      .from('scenarios')
-      .delete()
-      .eq('id', id);
-    
-    if(error) throw error;
-    loadScenariosFromCloud();
-    showToast('Escenario eliminado', 'success');
-  } catch(e) {
-    showToast(e.message, 'error');
-  }
-}
-
 function saveScenario(){
   const name=document.getElementById('scenarioName').value.trim();
   if(!name){showToast('Ingresá un nombre para el escenario','warning');return;}
-  supabase.auth.getSession().then(async ({ data }) => {
-    if(data.session){
-      // Save to cloud
-      const scenarioData = {
-        id: crypto.randomUUID(),
-        user_id: data.session.user.id,
-        scenario_name: name,
-        data: {cur,PR:{...PR},producerName,establishmentName,advCosts,advFlete,advKm,advArr,advArrByCrop,ur}
-      };
-      const { error } = await supabase.from('scenarios').insert(scenarioData);
-      if(error){showToast(error.message,'error');return;}
-      closeSaveScenarioModal();
-      showToast(`Escenario "${name}" guardado en la nube`,'success');
-    }else{
-      // Save to localStorage
-      const scenario={name,date:new Date().toLocaleDateString('es-AR'),cur,PR:{...PR},producerName,establishmentName,advCosts,advFlete,advKm,advArr,advArrByCrop,ur};
-      const saved=getSavedScenarios();
-      saved.push(scenario);
-      localStorage.setItem('agromargen_scenarios',JSON.stringify(saved));
-      closeSaveScenarioModal();
-      showToast(`Escenario "${name}" guardado localmente`,'success');
-    }
-  });
+  const scenario={name,date:new Date().toLocaleDateString('es-AR'),cur,PR:{...PR},producerName,establishmentName,advCosts,advFlete,advKm,advArr,advArrByCrop,ur};
+  const saved=getSavedScenarios();
+  saved.push(scenario);
+  localStorage.setItem('agromargen_scenarios',JSON.stringify(saved));
+  closeSaveScenarioModal();
+  showToast(`Escenario "${name}" guardado exitosamente`,'success');
 }
 function getSavedScenarios(){try{return JSON.parse(localStorage.getItem('agromargen_scenarios'))||[]}catch{return [];}}
 function buildSavedScenariosList(){
@@ -4807,143 +4634,16 @@ function goHome(){
   window.scrollTo(0,0);
 }
 
-/* ===== SUPABASE AUTH & SYNC ===== */
-const SB_URL = 'https://iuxwnuzabssjixwfdbmy.supabase.co';
-const SB_KEY = 'sb_publishable_2S9eG1SxRs4L2nRv-6WygQ_h83a8lM2';
-const supabase = supabase.createClient(SB_URL, SB_KEY);
-
-let authMode = 'login'; // 'login' or 'signup'
-
-function toggleAuthMode() {
-  authMode = authMode === 'login' ? 'signup' : 'login';
-  document.getElementById('btnAuthMain').textContent = authMode === 'login' ? 'Iniciar Sesión' : 'Crear Cuenta';
-  document.getElementById('authSubtitle').textContent = authMode === 'login' 
-    ? 'Ingresá para gestionar tus escenarios agrícolas' 
-    : 'Crea una cuenta para sincronizar tus datos en la nube';
-  document.getElementById('authToggle').textContent = authMode === 'login' 
-    ? '¿No tenés cuenta? Registrate aquí' 
-    : '¿Ya tenés cuenta? Inicia sesión aquí';
-}
-
-async function handleAuthMain() {
-  const email = document.getElementById('authEmail').value;
-  const password = document.getElementById('authPass').value;
-  if (!email || !password) return showToast('Por favor completa todos los campos', 'error');
-
-  try {
-    if (authMode === 'login') {
-      const { data, error } = await supabase.auth.signInWithPassword({ email, password });
-      if (error) throw error;
-      showToast('Bienvenido de vuelta', 'success');
-    } else {
-      const { data, error } = await supabase.auth.signUp({ email, password });
-      if (error) throw error;
-      showToast('Cuenta creada. Por favor, verifica tu email', 'info');
-      toggleAuthMode(); // Switch back to login
-    }
-    updateAuthUI();
-  } catch (e) {
-    showToast(e.message, 'error');
-  }
-}
-
-async function signInWithGoogle() {
-  try {
-    const { error } = await supabase.auth.signInWithOAuth({ provider: 'google' });
-    if (error) throw error;
-  } catch (e) {
-    showToast(e.message, 'error');
-  }
-}
-
-async function handleSignOut() {
-  try {
-    await supabase.auth.signOut();
-    showToast('Sesión cerrada', 'info');
-    updateAuthUI();
-  } catch (e) {
-    showToast(e.message, 'error');
-  }
-}
-
-async function updateAuthUI() {
-  const { data: { session } } = await supabase.auth.getSession();
-  const authScreen = document.getElementById('authScreen');
-  const homeScreen = document.getElementById('homeScreen');
-  const appShell = document.getElementById('appShell');
-
-  if (session) {
-    if (authScreen) authScreen.style.display = 'none';
-    // Keep current visibility of home/app as managed by enterTool/goHome
-  } else {
-    if (authScreen) authScreen.style.display = 'flex';
-    if (homeScreen) homeScreen.style.display = 'none';
-    if (appShell) appShell.style.display = 'none';
-  }
-}
-
-// Override existing scenario functions
-const originalSaveScenario = saveScenario;
-const originalLoadScenarios = openLoadScenarioModal; // This opens the modal, I need the function that fills the list
-
-async function saveScenario() {
-  const name = document.getElementById('scenarioName').value;
-  if (!name) return showToast('Por favor ingresá un nombre para el escenario', 'error');
-
-  const { data: { user } } = await supabase.auth.getUser();
-  if (!user) return showToast('Debes iniciar sesión para guardar en la nube', 'error');
-
-  const scenarioData = {
-    scenario_name: name,
-    user_id: user.id,
-    data: {
-      ur: ur,
-      advCosts: advCosts,
-      advFlete: advFlete,
-      advKm: advKm,
-      advArr: advArr,
-      advArrByCrop: advArrByCrop,
-      cur: cur,
-      producerName: producerName,
-      establishmentName: establishmentName
-    }
-  };
-
-  try {
-    const { error } = await supabase.from('scenarios').upsert(scenarioData, { onConflict: 'id' });
-    if (error) throw error;
-    showToast('Escenario guardado en la nube', 'success');
-    closeSaveScenarioModal();
-  } catch (e) {
-    showToast(e.message, 'error');
-  }
-}
-
-// We need to override the part of loadScenarioModal that fetches the list
-// Since I don't have the full content of the JS functions here, I'll have to search and replace the load logic.
-
+/* ===== INIT ===== */
 function init(){
   document.body.classList.remove('tool-active');
   document.body.classList.add('home-active');
   const home=document.getElementById('homeScreen');
   const app=document.getElementById('appShell');
   const exportBar=document.getElementById('exportBar');
-  const authScreen=document.getElementById('authScreen');
-  
-  supabase.auth.getSession().then(({ data }) => {
-    if (data.session) {
-      if(authScreen) authScreen.style.display='none';
-      if(home) home.style.display='block';
-      if(app) app.style.display='none';
-      if(exportBar) exportBar.style.display='none';
-    } else {
-      if(authScreen) authScreen.style.display='flex';
-      if(home) home.style.display='none';
-      if(app) app.style.display='none';
-      if(exportBar) exportBar.style.display='none';
-    }
-  });
-  
+  if(home) home.style.display='block';
+  if(app) app.style.display='none';
+  if(exportBar) exportBar.style.display='none';
   const sel=document.getElementById('deptSel');
   setProducerName('');
   setEstabName('');
@@ -4978,19 +4678,6 @@ function init(){
   });
 }
 init();
-
-supabase.auth.onAuthStateChange((event, session) => {
-  const authScreen=document.getElementById('authScreen');
-  const home=document.getElementById('homeScreen');
-  const app=document.getElementById('appShell');
-  if(session){
-    if(authScreen) authScreen.style.display='none';
-  }else{
-    if(authScreen) authScreen.style.display='flex';
-    if(home) home.style.display='none';
-    if(app) app.style.display='none';
-  }
-});
 </script>
 </body>
 </html>

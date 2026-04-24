@@ -4,7 +4,7 @@
 
 ```
 Margenes/
-├── .agents/skills/           # OpenCode skills (5 installed)
+ ├── .agents/skills/           # OpenCode skills (9 installed)
 ├── AGROMARGEN_2026-27.html   # Main application (244KB)
 ├── AGENTS.md                # This file
 ├── README.md                # Project documentation
@@ -61,6 +61,10 @@ Single-file SPA for agricultural economic analysis. No build system - open direc
 | `frontend-design` | UI creation | anthropics/skills |
 | `skill-creator` | Create/evaluate skills | anthropics/skills |
 | `systematic-debugging` | Bug investigation | obra/superpowers |
+| `supabase` | Supabase integration tasks | vercel-labs/supabase |
+| `supabase-postgres-best-practices` | Postgres optimization best practices | vercel-labs/supabase-postgres-best-practices |
+| `context7-mcp` | Library/API references and code examples | context7 MCP |
+| `find-skills` | Discover/install agent skills | anthropics/skills |
 
 ### Skills structure
 
@@ -78,6 +82,19 @@ Single-file SPA for agricultural economic analysis. No build system - open direc
   - eval-viewer/
   - references/
   - scripts/
+
+- **agent-browser/**
+  - SKILL.md
+- **frontend-design/**
+  - SKILL.md
+- **context7-mcp/**
+  - SKILL.md
+- **find-skills/**
+  - SKILL.md
+- **supabase/**
+  - SKILL.md
+- **supabase-postgres-best-practices/**
+  - SKILL.md
 
 - **systematic-debugging/**
   - SKILL.md
