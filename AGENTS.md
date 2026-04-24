@@ -2,17 +2,21 @@
 
 ## Project structure
 
-- `AGROMARGEN_2026-27.html` - Agricultural margin calculator (4567 lines)
-- `.agents/skills/` - Installed OpenCode skills
-- `skills-lock.json` - Tracks installed skills
-- `SKILL.md` - Main skill definition
+```
+Margenes/
+├── .agents/skills/           # OpenCode skills (5 installed)
+├── AGROMARGEN_2026-27.html   # Main application (244KB)
+├── AGENTS.md                # This file
+├── README.md                # Project documentation
+└── skills-lock.json         # Installed skills tracking
+```
 
 ## Main application (AGROMARGEN_2026-27.html)
 
 Single-file SPA for agricultural economic analysis. No build system - open directly in browser.
 
 ### Features
-- Margin calculation for 7 crops/sequences:
+- **7 Crops/sequences:**
   - Soja 1°
   - Trigo + Soja 2°
   - Trigo
@@ -20,19 +24,23 @@ Single-file SPA for agricultural economic analysis. No build system - open direc
   - Maíz Tardío
   - Sorgo
   - Girasol
-- Decision panel (rentabilidad por hectare)
-- Break-even analysis (punto de equilibrio)
-- Quality bonifications (bonificaciones por calidad)
-- Price coverage (cobertura de precios)
-- Sensitivity analysis (análisis de sensibilidad)
-- Charts (Chart.js + chartjs-plugin-annotation)
-- PDF export (jsPDF + jsPDF-autotable)
-- Excel export (SheetJS/xlsx)
-- Toast notifications
-- Modal dialogs
-- BCRP price fetch (Banco Central de Reserva del Perú)
-- Save/load scenarios (localStorage)
-- Presentation mode
+- **Analysis tools:**
+  - Decision panel (rentabilidad por hectare)
+  - Break-even analysis (punto de equilibrio)
+  - Quality bonifications (bonificaciones por calidad)
+  - Price coverage (cobertura de precios)
+  - Sensitivity analysis (análisis de sensibilidad)
+- **Exports:**
+  - PDF export (jsPDF + jsPDF-autotable)
+  - Excel export (SheetJS/xlsx)
+- **UI/UX:**
+  - Charts (Chart.js + chartjs-plugin-annotation)
+  - Toast notifications
+  - Modal dialogs
+  - Presentation mode
+- **Data:**
+  - BCRP price fetch (Banco Central de Reserva del Perú)
+  - Save/load scenarios (localStorage)
 
 ### Tech stack
 - Vanilla HTML/CSS/JS (no framework)
@@ -46,13 +54,36 @@ Single-file SPA for agricultural economic analysis. No build system - open direc
 
 ## Installed skills
 
-| Skill | Description |
-|-------|-------------|
-| `agent-browser` | Browser automation - navigate, fill forms, click, scrape |
-| `brainstorming` | Creative work, feature design, requirements |
-| `frontend-design` | UI creation, web components, styling |
-| `skill-creator` | Create/evaluate skills, benchmarks |
-| `systematic-debugging` | Bug investigation, root cause analysis |
+| Skill | Description | Source |
+|-------|-------------|--------|
+| `agent-browser` | Browser automation | vercel-labs/agent-browser |
+| `brainstorming` | Creative work, feature design | obra/superpowers |
+| `frontend-design` | UI creation | anthropics/skills |
+| `skill-creator` | Create/evaluate skills | anthropics/skills |
+| `systematic-debugging` | Bug investigation | obra/superpowers |
+
+### Skills structure
+
+- **brainstorming/**
+  - SKILL.md
+  - visual-companion.md
+  - spec-document-reviewer-prompt.md
+  - scripts/
+
+- **skill-creator/**
+  - SKILL.md
+  - LICENSE.txt
+  - agents/
+  - assets/
+  - eval-viewer/
+  - references/
+  - scripts/
+
+- **systematic-debugging/**
+  - SKILL.md
+  - CREATION-LOG.md
+  - test-pressure-*.md
+  - condition-based-waiting*.ts
 
 ## Development
 
@@ -66,8 +97,8 @@ Single-file SPA for agricultural economic analysis. No build system - open direc
 - Skills loaded from `.agents/skills/`
 - OpenCode auto-triggers skills based on user requests
 - No special setup required
-- Use the `systematic-debugging` skill for bugs
-- Use the `brainstorming` skill for new features
+- Use `systematic-debugging` skill for bugs
+- Use `brainstorming` skill for new features
 
 ## Pending features (design phase)
 
