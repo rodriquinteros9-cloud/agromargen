@@ -1359,10 +1359,123 @@ table.ct td.cedit:focus-within{background:#9dd8f9}
       <button class="btn green" onclick="saveAdv()" style="padding:8px 28px;font-size:13px">💾 Guardar</button>
       <button class="btn" onclick="resetAdv()" style="padding:8px 20px;font-size:13px">🔄 Restablecer valores iniciales</button>
       <button class="btn red" onclick="closeAdv()" style="padding:8px 22px;font-size:13px">🗑 No Guardar</button>
+     </div>
+   </div>
+ </div>
+ </div>
+
+<!-- CUSTOM COSTS EDITOR VIEW -->
+<div id="customCostsView" class="wrap" style="display: none; margin-top: 0; border-radius: 0; max-width: 100vw">
+  <div style="padding: 24px; background: var(--surface-soft); border-bottom: 2px solid var(--line); display: flex; align-items: center; gap: 16px;">
+    <button onclick="goBackFromCustomCosts()" class="btn" style="padding: 8px 16px;">← Volver</button>
+    <div style="flex: 1;">
+      <h2 style="margin: 0; font-size: 18px; font-weight: 700; color: var(--ink);">INGRESAR COSTOS PERSONALIZADOS</h2>
+      <p id="customCostsCropLabel" style="margin: 4px 0 0 0; font-size: 12px; color: var(--ink-soft);">Cultivo: -</p>
     </div>
   </div>
+
+  <div style="padding: 24px; overflow-y: auto; max-height: calc(100vh - 200px);">
+    <form id="customCostsForm" style="display: grid; gap: 28px;">
+      
+      <!-- INSUMOS SECTION -->
+      <fieldset style="border: none; padding: 0; margin: 0;">
+        <legend style="font-size: 14px; font-weight: 700; color: var(--brand); margin-bottom: 12px; display: flex; justify-content: space-between; align-items: center;">
+          INSUMOS - HERBICIDAS
+          <button type="button" class="btn" id="addHerbicidaBtn" style="padding: 6px 12px; font-size: 11px;">+ Agregar fila</button>
+        </legend>
+        <div id="herbicidasContainer" style="display: grid; gap: 8px; padding: 12px; background: #f9faf8; border-radius: var(--radius-md); border: 1px solid var(--line);">
+          <!-- Rows will be inserted here -->
+        </div>
+      </fieldset>
+
+      <fieldset style="border: none; padding: 0; margin: 0;">
+        <legend style="font-size: 14px; font-weight: 700; color: var(--brand); margin-bottom: 12px; display: flex; justify-content: space-between; align-items: center;">
+          INSUMOS - INSECTICIDAS
+          <button type="button" class="btn" id="addInsecticidaBtn" style="padding: 6px 12px; font-size: 11px;">+ Agregar fila</button>
+        </legend>
+        <div id="insecticidasContainer" style="display: grid; gap: 8px; padding: 12px; background: #f9faf8; border-radius: var(--radius-md); border: 1px solid var(--line);">
+          <!-- Rows will be inserted here -->
+        </div>
+      </fieldset>
+
+      <fieldset style="border: none; padding: 0; margin: 0;">
+        <legend style="font-size: 14px; font-weight: 700; color: var(--brand); margin-bottom: 12px; display: flex; justify-content: space-between; align-items: center;">
+          INSUMOS - FERTILIZANTES
+          <button type="button" class="btn" id="addFertilizanteBtn" style="padding: 6px 12px; font-size: 11px;">+ Agregar fila</button>
+        </legend>
+        <div id="fertilizantesContainer" style="display: grid; gap: 8px; padding: 12px; background: #f9faf8; border-radius: var(--radius-md); border: 1px solid var(--line);">
+          <!-- Rows will be inserted here -->
+        </div>
+      </fieldset>
+
+      <!-- LABORES SECTION -->
+      <fieldset style="border: none; padding: 0; margin: 0;">
+        <legend style="font-size: 14px; font-weight: 700; color: var(--brand); margin-bottom: 12px; display: flex; justify-content: space-between; align-items: center;">
+          LABORES
+          <button type="button" class="btn" id="addLaborBtn" style="padding: 6px 12px; font-size: 11px;">+ Agregar fila</button>
+        </legend>
+        <div id="laboresContainer" style="display: grid; gap: 8px; padding: 12px; background: #f9faf8; border-radius: var(--radius-md); border: 1px solid var(--line);">
+          <!-- Rows will be inserted here -->
+        </div>
+      </fieldset>
+
+      <!-- RESUMEN SECTION (read-only) -->
+      <fieldset style="border: none; padding: 0; margin: 0; background: linear-gradient(135deg, #f5fbf1 0%, #f9fbf7 100%); border: 2px solid var(--line); border-radius: var(--radius-md); padding: 16px;">
+        <legend style="font-size: 14px; font-weight: 700; color: var(--brand); margin-bottom: 12px; padding: 0 8px;">RESUMEN DE COSTOS</legend>
+        <div id="customCostsResumen" style="display: grid; gap: 8px; font-size: 12px;">
+          <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 16px;">
+            <div><span style="color: var(--ink-soft);">Total Insumos:</span><br/><strong id="totalInsumosDisplay">0.00</strong> <span style="font-size: 11px; color: var(--ink-soft);">us$/ha</span></div>
+            <div><span style="color: var(--ink-soft);">Total Labores:</span><br/><strong id="totalLaboresDisplay">0.00</strong> <span style="font-size: 11px; color: var(--ink-soft);">us$/ha</span></div>
+          </div>
+          <hr style="border: none; border-top: 1px solid var(--line); margin: 12px 0; opacity: 0.5;" />
+          <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 16px;">
+            <div><span style="color: var(--ink-soft);">Total Gastos Directos:</span><br/><strong id="totalGastosDirectosDisplay">0.00</strong> <span style="font-size: 11px; color: var(--ink-soft);">us$/ha</span></div>
+            <div><span style="color: var(--ink-soft);">Alquiler + Ad+Estr:</span><br/><strong id="totalAlquilerDisplay">0.00</strong> <span style="font-size: 11px; color: var(--ink-soft);">us$/ha</span></div>
+          </div>
+          <hr style="border: none; border-top: 2px solid var(--brand); margin: 12px 0;" />
+          <div style="background: #fff; padding: 12px; border-radius: 8px; text-align: center;">
+            <span style="color: var(--ink-soft); font-size: 11px;">TOTAL GASTOS</span><br/>
+            <strong id="totalGastosDisplay" style="font-size: 20px; color: var(--brand);">0.00</strong> <span style="font-size: 11px; color: var(--ink-soft);">us$/ha</span>
+          </div>
+        </div>
+      </fieldset>
+    </form>
+  </div>
+
+  <div style="padding: 16px 24px; background: var(--surface-soft); border-top: 2px solid var(--line); display: flex; gap: 12px; justify-content: flex-end;">
+    <button type="button" class="btn" id="clearCustomCostsBtn" style="padding: 10px 20px;">Limpiar</button>
+    <button type="button" class="btn" id="exportCustomCostsPdfBtn" style="padding: 10px 20px;">Exportar PDF</button>
+    <button type="button" class="btn green" id="saveCustomCostsBtn" style="padding: 10px 24px; font-weight: 600;">💾 Guardar Costos Personalizados</button>
+  </div>
 </div>
-</div>
+
+<!-- TEMPLATES FOR ROW CLONING -->
+<template id="insumoRowTemplate">
+  <div class="custom-insumo-row" data-row-id="" style="display: grid; grid-template-columns: 1.5fr 1fr 0.8fr 0.8fr 0.8fr auto; gap: 8px; align-items: flex-start; padding: 10px; background: #fff; border-radius: 8px; border: 1px solid var(--line);">
+    <input type="text" class="insumo-nombre" placeholder="Nombre del insumo" style="padding: 8px; border: 1px solid var(--line); border-radius: 6px; font-size: 11px;" />
+    <select class="insumo-tipo" style="padding: 8px; border: 1px solid var(--line); border-radius: 6px; font-size: 11px;">
+      <option value="">- Tipo -</option>
+      <option value="Barbecho">Barbecho</option>
+      <option value="Pre-siembra">Pre-siembra</option>
+      <option value="Pre-emergencia">Pre-emergencia</option>
+      <option value="Post-emergencia">Post-emergencia</option>
+    </select>
+    <input type="number" class="insumo-cantidad" placeholder="Cant." step="0.01" style="padding: 8px; border: 1px solid var(--line); border-radius: 6px; font-size: 11px;" />
+    <input type="number" class="insumo-valorUSD" placeholder="USD" step="0.01" style="padding: 8px; border: 1px solid var(--line); border-radius: 6px; font-size: 11px;" />
+    <input type="number" class="insumo-costoUSD" placeholder="Costo" step="0.01" readonly style="padding: 8px; border: 1px solid var(--line); border-radius: 6px; font-size: 11px; background: #f5f7f2; color: var(--ink-soft);" />
+    <button type="button" class="deleteRow" style="padding: 8px 10px; border: 1px solid var(--bad); background: #fff; color: var(--bad); border-radius: 6px; cursor: pointer; font-weight: 600; font-size: 14px; line-height: 1;">×</button>
+  </div>
+</template>
+
+<template id="laborRowTemplate">
+  <div class="custom-labor-row" data-row-id="" style="display: grid; grid-template-columns: 2fr 0.8fr 0.8fr 0.8fr auto; gap: 8px; align-items: flex-start; padding: 10px; background: #fff; border-radius: 8px; border: 1px solid var(--line);">
+    <input type="text" class="labor-tarea" placeholder="Nombre de la labor" style="padding: 8px; border: 1px solid var(--line); border-radius: 6px; font-size: 11px;" />
+    <input type="number" class="labor-cantidad" placeholder="Cant." step="0.01" style="padding: 8px; border: 1px solid var(--line); border-radius: 6px; font-size: 11px;" />
+    <input type="number" class="labor-precioUnitario" placeholder="Precio" step="0.01" style="padding: 8px; border: 1px solid var(--line); border-radius: 6px; font-size: 11px;" />
+    <input type="number" class="labor-costoUSD" placeholder="Costo" step="0.01" readonly style="padding: 8px; border: 1px solid var(--line); border-radius: 6px; font-size: 11px; background: #f5f7f2; color: var(--ink-soft);" />
+    <button type="button" class="deleteRow" style="padding: 8px 10px; border: 1px solid var(--bad); background: #fff; color: var(--bad); border-radius: 6px; cursor: pointer; font-weight: 600; font-size: 14px; line-height: 1;">×</button>
+  </div>
+</template>
 
 <script>
 /* ===== DATA ===== */
@@ -1472,6 +1585,282 @@ let tmpFlete=null;
 let tmpKm=null;
 let tmpArr=null;
 let tmpArrByCrop=null;
+
+/* ===== CUSTOM COSTS SYSTEM ===== */
+const customCosts = {
+  // Generate localStorage key for crop
+  getKey: (crop) => `agromargen_customCosts_${crop}`,
+  
+  // Generate unique row ID
+  generateRowId: () => `row_${Date.now()}_${Math.random().toString(36).substr(2,9)}`,
+  
+  // Create empty scenario
+  createEmptyScenario: (crop, name = '') => {
+    const now = new Date().toISOString();
+    return {
+      id: `custom_${crop}_${Date.now()}`,
+      name: name || `Costos Reales - ${crop.toUpperCase()} (${new Date().toLocaleDateString('es-AR')})`,
+      crop: crop,
+      createdAt: now,
+      lastModified: now,
+      active: false,
+      insumos: {
+        herbicidas: [],
+        insecticidas: [],
+        fertilizantes: []
+      },
+      labores: [],
+      totales: {
+        insumos: 0,
+        labores: 0,
+        gastosDirectos: 0,
+        alquiler: 0,
+        adEstr: 0,
+        totalGastos: 0
+      }
+    };
+  },
+  
+  // Validate single insumo row
+  validateInsumo: (insumo) => {
+    const errors = [];
+    if (!insumo.nombre || insumo.nombre.trim() === '') errors.push('Nombre requerido');
+    if (!insumo.tipo || insumo.tipo.trim() === '') errors.push('Tipo requerido');
+    if (insumo.cantidad === null || insumo.cantidad === '' || isNaN(insumo.cantidad) || insumo.cantidad < 0) 
+      errors.push('Cantidad debe ser un número positivo');
+    if (insumo.valorUSD === null || insumo.valorUSD === '' || isNaN(insumo.valorUSD) || insumo.valorUSD < 0)
+      errors.push('Valor USD debe ser un número positivo');
+    return { valid: errors.length === 0, errors };
+  },
+  
+  // Validate single labor row
+  validateLabor: (labor) => {
+    const errors = [];
+    if (!labor.tarea || labor.tarea.trim() === '') errors.push('Tarea requerida');
+    if (labor.cantidad === null || labor.cantidad === '' || isNaN(labor.cantidad) || labor.cantidad < 0)
+      errors.push('Cantidad debe ser un número positivo');
+    if (labor.precioUnitario === null || labor.precioUnitario === '' || isNaN(labor.precioUnitario) || labor.precioUnitario < 0)
+      errors.push('Precio unitario debe ser un número positivo');
+    return { valid: errors.length === 0, errors };
+  },
+  
+  // Validate entire scenario
+  validateScenario: (scenario) => {
+    const errors = [];
+    
+    // Validate all insumo rows
+    scenario.insumos.herbicidas.forEach((row, idx) => {
+      const validation = customCosts.validateInsumo(row);
+      if (!validation.valid) {
+        errors.push(`Herbicida fila ${idx + 1}: ${validation.errors.join(', ')}`);
+      }
+    });
+    
+    scenario.insumos.insecticidas.forEach((row, idx) => {
+      const validation = customCosts.validateInsumo(row);
+      if (!validation.valid) {
+        errors.push(`Insecticida fila ${idx + 1}: ${validation.errors.join(', ')}`);
+      }
+    });
+    
+    scenario.insumos.fertilizantes.forEach((row, idx) => {
+      const validation = customCosts.validateInsumo(row);
+      if (!validation.valid) {
+        errors.push(`Fertilizante fila ${idx + 1}: ${validation.errors.join(', ')}`);
+      }
+    });
+    
+    // Validate all labor rows
+    scenario.labores.forEach((row, idx) => {
+      const validation = customCosts.validateLabor(row);
+      if (!validation.valid) {
+        errors.push(`Labor fila ${idx + 1}: ${validation.errors.join(', ')}`);
+      }
+    });
+    
+    return { valid: errors.length === 0, errors };
+  },
+  
+  // Calculate single insumo row cost
+  calculateInsumoRowCost: (cantidad, valorUSD) => {
+    const q = parseFloat(cantidad) || 0;
+    const v = parseFloat(valorUSD) || 0;
+    return q * v;
+  },
+  
+  // Calculate single labor row cost
+  calculateLaborRowCost: (cantidad, precioUnitario) => {
+    const q = parseFloat(cantidad) || 0;
+    const p = parseFloat(precioUnitario) || 0;
+    return q * p;
+  },
+  
+  // Calculate all totals in scenario
+  calculateScenarioTotals: (scenario) => {
+    // Sum all insumos
+    const herbicidasCost = scenario.insumos.herbicidas.reduce((sum, row) => {
+      return sum + customCosts.calculateInsumoRowCost(row.cantidad, row.valorUSD);
+    }, 0);
+    
+    const insecticidayCost = scenario.insumos.insecticidas.reduce((sum, row) => {
+      return sum + customCosts.calculateInsumoRowCost(row.cantidad, row.valorUSD);
+    }, 0);
+    
+    const fertilizantesCost = scenario.insumos.fertilizantes.reduce((sum, row) => {
+      return sum + customCosts.calculateInsumoRowCost(row.cantidad, row.valorUSD);
+    }, 0);
+    
+    const totalInsumos = herbicidasCost + insecticidayCost + fertilizantesCost;
+    
+    // Sum all labores
+    const totalLabores = scenario.labores.reduce((sum, row) => {
+      return sum + customCosts.calculateLaborRowCost(row.cantidad, row.precioUnitario);
+    }, 0);
+    
+    // Get alquiler and adEstr (for now, we'll need to get these from current estimates)
+    // This will be integrated later when we hook into the rentabilidad system
+    const alquiler = 0; // Placeholder
+    const adEstr = 0;   // Placeholder
+    
+    const gastosDirectos = totalInsumos + totalLabores;
+    const totalGastos = gastosDirectos + alquiler + adEstr;
+    
+    scenario.totales = {
+      insumos: totalInsumos,
+      labores: totalLabores,
+      gastosDirectos: gastosDirectos,
+      alquiler: alquiler,
+      adEstr: adEstr,
+      totalGastos: totalGastos
+    };
+    
+    return scenario;
+  },
+  
+  // Save scenario to localStorage
+  saveScenario: (crop, scenario) => {
+    try {
+      // Calculate totals before saving
+      customCosts.calculateScenarioTotals(scenario);
+      
+      // Get existing scenarios or create new array
+      const key = customCosts.getKey(crop);
+      const existing = localStorage.getItem(key);
+      const scenarios = existing ? JSON.parse(existing) : [];
+      
+      // Check if this scenario already exists (update)
+      const existingIndex = scenarios.findIndex(s => s.id === scenario.id);
+      if (existingIndex >= 0) {
+        scenarios[existingIndex] = scenario;
+      } else {
+        scenarios.push(scenario);
+      }
+      
+      // Save back to localStorage
+      localStorage.setItem(key, JSON.stringify(scenarios));
+      return { success: true, scenario: scenario };
+    } catch (err) {
+      console.error('Error saving custom costs scenario:', err);
+      return { success: false, error: err.message };
+    }
+  },
+  
+  // Load specific scenario
+  loadScenario: (crop, scenarioId) => {
+    try {
+      const key = customCosts.getKey(crop);
+      const existing = localStorage.getItem(key);
+      if (!existing) return null;
+      
+      const scenarios = JSON.parse(existing);
+      return scenarios.find(s => s.id === scenarioId) || null;
+    } catch (err) {
+      console.error('Error loading custom costs scenario:', err);
+      return null;
+    }
+  },
+  
+  // Load all scenarios for a crop
+  loadAllScenarios: (crop) => {
+    try {
+      const key = customCosts.getKey(crop);
+      const existing = localStorage.getItem(key);
+      return existing ? JSON.parse(existing) : [];
+    } catch (err) {
+      console.error('Error loading custom costs scenarios:', err);
+      return [];
+    }
+  },
+  
+  // Delete scenario
+  deleteScenario: (crop, scenarioId) => {
+    try {
+      const key = customCosts.getKey(crop);
+      const existing = localStorage.getItem(key);
+      if (!existing) return { success: false, error: 'No scenarios found' };
+      
+      let scenarios = JSON.parse(existing);
+      scenarios = scenarios.filter(s => s.id !== scenarioId);
+      
+      if (scenarios.length === 0) {
+        localStorage.removeItem(key);
+      } else {
+        localStorage.setItem(key, JSON.stringify(scenarios));
+      }
+      return { success: true };
+    } catch (err) {
+      console.error('Error deleting custom costs scenario:', err);
+      return { success: false, error: err.message };
+    }
+  },
+  
+  // Set active scenario for a crop
+  setActiveScenario: (crop, scenarioId) => {
+    try {
+      const key = customCosts.getKey(crop);
+      const scenarios = customCosts.loadAllScenarios(crop);
+      
+      // Deactivate all scenarios
+      scenarios.forEach(s => s.active = false);
+      
+      // Activate selected scenario
+      const scenario = scenarios.find(s => s.id === scenarioId);
+      if (scenario) {
+        scenario.active = true;
+        localStorage.setItem(key, JSON.stringify(scenarios));
+        return { success: true, scenario: scenario };
+      }
+      return { success: false, error: 'Scenario not found' };
+    } catch (err) {
+      console.error('Error setting active custom costs scenario:', err);
+      return { success: false, error: err.message };
+    }
+  },
+  
+  // Get currently active scenario for a crop
+  getActiveScenario: (crop) => {
+    const scenarios = customCosts.loadAllScenarios(crop);
+    return scenarios.find(s => s.active) || null;
+  },
+  
+  // Clear active scenario (revert to estimated)
+  clearActiveScenario: (crop) => {
+    try {
+      const key = customCosts.getKey(crop);
+      const scenarios = customCosts.loadAllScenarios(crop);
+      
+      scenarios.forEach(s => s.active = false);
+      
+      if (scenarios.length > 0) {
+        localStorage.setItem(key, JSON.stringify(scenarios));
+      }
+      return { success: true };
+    } catch (err) {
+      console.error('Error clearing active custom costs scenario:', err);
+      return { success: false, error: err.message };
+    }
+  }
+};
 
 /* ===== HELPERS ===== */
 function showToast(message,type='info',duration=4000){
@@ -4675,9 +5064,280 @@ function init(){
       decOpen=beOpen=sensOpen=cobOpen=qualOpen=false;
       window.scrollTo(0,0);
     }
-  });
+   });
 }
-init();
+
+/* ===== CUSTOM COSTS NAVIGATION ===== */
+let currentCustomCostsCrop = null;
+let currentCustomCostsScenario = null;
+
+function goToCustomCostsEditor(crop) {
+  currentCustomCostsCrop = crop;
+  currentCustomCostsScenario = customCosts.createEmptyScenario(crop);
+  
+  // Hide all other views
+  document.body.classList.remove('home-active', 'tool-active');
+  const homeScreen = document.getElementById('homeScreen');
+  const appShell = document.getElementById('appShell');
+  const exportBar = document.getElementById('exportBar');
+  const customCostsView = document.getElementById('customCostsView');
+  
+  if (homeScreen) homeScreen.style.display = 'none';
+  if (appShell) appShell.style.display = 'none';
+  if (exportBar) exportBar.style.display = 'none';
+  if (customCostsView) customCostsView.style.display = 'block';
+  
+  // Update crop label
+  const label = document.getElementById('customCostsCropLabel');
+  if (label) label.textContent = `Cultivo: ${crop.toUpperCase()}`;
+  
+  // Initialize empty form
+  clearCustomCostsForm();
+}
+
+function goBackFromCustomCosts() {
+  currentCustomCostsCrop = null;
+  currentCustomCostsScenario = null;
+  
+  const customCostsView = document.getElementById('customCostsView');
+  if (customCostsView) customCostsView.style.display = 'none';
+  
+  // Return to home
+  document.body.classList.remove('home-active', 'tool-active');
+  document.body.classList.add('home-active');
+  const homeScreen = document.getElementById('homeScreen');
+  if (homeScreen) homeScreen.style.display = 'block';
+}
+
+function clearCustomCostsForm() {
+  document.getElementById('herbicidasContainer').innerHTML = '';
+  document.getElementById('insecticidasContainer').innerHTML = '';
+  document.getElementById('fertilizantesContainer').innerHTML = '';
+  document.getElementById('laboresContainer').innerHTML = '';
+  updateCustomCostsTotals();
+}
+
+/* ===== CUSTOM COSTS ROW MANAGEMENT ===== */
+function addCustomCostsRow(category) {
+  const template = category === 'labor' 
+    ? document.getElementById('laborRowTemplate')
+    : document.getElementById('insumoRowTemplate');
+  
+  if (!template) return;
+  
+  const clone = template.content.cloneNode(true);
+  const rowId = customCosts.generateRowId();
+  const rowDiv = clone.querySelector('div');
+  if (rowDiv) rowDiv.setAttribute('data-row-id', rowId);
+  
+  // Determine container
+  let container;
+  if (category === 'herbicidas') container = document.getElementById('herbicidasContainer');
+  else if (category === 'insecticidas') container = document.getElementById('insecticidasContainer');
+  else if (category === 'fertilizantes') container = document.getElementById('fertilizantesContainer');
+  else if (category === 'labor') container = document.getElementById('laboresContainer');
+  
+  if (!container) return;
+  
+  container.appendChild(clone);
+  
+  // Get the newly added row
+  const newRow = container.querySelector(`[data-row-id="${rowId}"]`);
+  if (!newRow) return;
+  
+  // Attach event listeners
+  const inputs = newRow.querySelectorAll('input[type="number"], input[type="text"], select');
+  inputs.forEach(input => {
+    input.addEventListener('change', updateCustomCostsTotals);
+    input.addEventListener('input', updateCustomCostsTotals);
+  });
+  
+  // Attach delete listener
+  const deleteBtn = newRow.querySelector('.deleteRow');
+  if (deleteBtn) {
+    deleteBtn.addEventListener('click', (e) => {
+      e.preventDefault();
+      if (confirm('¿Eliminar esta fila?')) {
+        newRow.remove();
+        updateCustomCostsTotals();
+        showToast('Fila eliminada', 'success', 2000);
+      }
+    });
+  }
+  
+  // Auto-focus first input
+  const firstInput = newRow.querySelector('input, select');
+  if (firstInput) {
+    setTimeout(() => firstInput.focus(), 100);
+  }
+}
+
+function deleteCustomCostsRow(btn) {
+  if (confirm('¿Eliminar esta fila?')) {
+    const row = btn.closest('[data-row-id]');
+    if (row) {
+      row.remove();
+      updateCustomCostsTotals();
+      showToast('Fila eliminada', 'success', 2000);
+    }
+  }
+}
+
+function updateCustomCostsTotals() {
+  let totalInsumos = 0;
+  let totalLabores = 0;
+  
+  // Update insumo costs
+  ['herbicidasContainer', 'insecticidasContainer', 'fertilizantesContainer'].forEach(containerId => {
+    const container = document.getElementById(containerId);
+    const rows = container.querySelectorAll('[data-row-id]');
+    rows.forEach(row => {
+      const cantidad = parseFloat(row.querySelector('[class*="cantidad"]').value) || 0;
+      const valor = parseFloat(row.querySelector('[class*="valorUSD"]').value) || 0;
+      const cost = cantidad * valor;
+      const costInput = row.querySelector('[class*="costoUSD"]');
+      if (costInput) costInput.value = cost.toFixed(2);
+      totalInsumos += cost;
+    });
+  });
+  
+  // Update labor costs
+  const laboresContainer = document.getElementById('laboresContainer');
+  const laborRows = laboresContainer.querySelectorAll('[data-row-id]');
+  laborRows.forEach(row => {
+    const cantidad = parseFloat(row.querySelector('.labor-cantidad').value) || 0;
+    const precio = parseFloat(row.querySelector('.labor-precioUnitario').value) || 0;
+    const cost = cantidad * precio;
+    const costInput = row.querySelector('.labor-costoUSD');
+    if (costInput) costInput.value = cost.toFixed(2);
+    totalLabores += cost;
+  });
+  
+  // Calculate totals
+  const gastosDirectos = totalInsumos + totalLabores;
+  // TODO: Get alquiler and adEstr from current rentabilidad data
+  const alquiler = 0;
+  const adEstr = 0;
+  const totalGastos = gastosDirectos + alquiler + adEstr;
+  
+  // Update display
+  document.getElementById('totalInsumosDisplay').textContent = totalInsumos.toFixed(2);
+  document.getElementById('totalLaboresDisplay').textContent = totalLabores.toFixed(2);
+  document.getElementById('totalGastosDirectosDisplay').textContent = gastosDirectos.toFixed(2);
+  document.getElementById('totalAlquilerDisplay').textContent = (alquiler + adEstr).toFixed(2);
+  document.getElementById('totalGastosDisplay').textContent = totalGastos.toFixed(2);
+  
+  // Update scenario data
+  if (currentCustomCostsScenario) {
+    currentCustomCostsScenario.insumos.herbicidas = [];
+    currentCustomCostsScenario.insumos.insecticidas = [];
+    currentCustomCostsScenario.insumos.fertilizantes = [];
+    currentCustomCostsScenario.labores = [];
+    
+    // Gather insumo data
+    ['herbicidasContainer', 'insecticidasContainer', 'fertilizantesContainer'].forEach((containerId, idx) => {
+      const category = ['herbicidas', 'insecticidas', 'fertilizantes'][idx];
+      const container = document.getElementById(containerId);
+      const rows = container.querySelectorAll('[data-row-id]');
+      rows.forEach(row => {
+        const insumo = {
+          id: row.getAttribute('data-row-id'),
+          nombre: row.querySelector('[class*="nombre"]').value || '',
+          tipo: row.querySelector('[class*="tipo"]').value || '',
+          cantidad: parseFloat(row.querySelector('[class*="cantidad"]').value) || 0,
+          valorUSD: parseFloat(row.querySelector('[class*="valorUSD"]').value) || 0,
+          costoUSD: parseFloat(row.querySelector('[class*="costoUSD"]').value) || 0
+        };
+        currentCustomCostsScenario.insumos[category].push(insumo);
+      });
+    });
+    
+    // Gather labor data
+    const laboresContainer = document.getElementById('laboresContainer');
+    const laborRows = laboresContainer.querySelectorAll('[data-row-id]');
+    laborRows.forEach(row => {
+      const labor = {
+        id: row.getAttribute('data-row-id'),
+        tarea: row.querySelector('.labor-tarea').value || '',
+        cantidad: parseFloat(row.querySelector('.labor-cantidad').value) || 0,
+        precioUnitario: parseFloat(row.querySelector('.labor-precioUnitario').value) || 0,
+        costoUSD: parseFloat(row.querySelector('.labor-costoUSD').value) || 0
+      };
+      currentCustomCostsScenario.labores.push(labor);
+    });
+    
+    // Update totals in scenario
+    currentCustomCostsScenario.totales = {
+      insumos: totalInsumos,
+      labores: totalLabores,
+      gastosDirectos: gastosDirectos,
+      alquiler: alquiler,
+       adEstr: adEstr,
+       totalGastos: totalGastos
+     };
+   }
+ }
+
+/* ===== CUSTOM COSTS INITIALIZATION ===== */
+document.addEventListener('DOMContentLoaded', () => {
+  // Button event listeners
+  const addHerbicidaBtn = document.getElementById('addHerbicidaBtn');
+  const addInsecticidaBtn = document.getElementById('addInsecticidaBtn');
+  const addFertilizanteBtn = document.getElementById('addFertilizanteBtn');
+  const addLaborBtn = document.getElementById('addLaborBtn');
+  const clearBtn = document.getElementById('clearCustomCostsBtn');
+  const saveBtn = document.getElementById('saveCustomCostsBtn');
+  const exportPdfBtn = document.getElementById('exportCustomCostsPdfBtn');
+  
+  if (addHerbicidaBtn) addHerbicidaBtn.addEventListener('click', (e) => { e.preventDefault(); addCustomCostsRow('herbicidas'); });
+  if (addInsecticidaBtn) addInsecticidaBtn.addEventListener('click', (e) => { e.preventDefault(); addCustomCostsRow('insecticidas'); });
+  if (addFertilizanteBtn) addFertilizanteBtn.addEventListener('click', (e) => { e.preventDefault(); addCustomCostsRow('fertilizantes'); });
+  if (addLaborBtn) addLaborBtn.addEventListener('click', (e) => { e.preventDefault(); addCustomCostsRow('labor'); });
+  
+  if (clearBtn) clearBtn.addEventListener('click', (e) => {
+    e.preventDefault();
+    if (confirm('¿Borrar todos los datos ingresados?')) {
+      clearCustomCostsForm();
+      showToast('Datos limpiados', 'success', 2000);
+    }
+  });
+  
+  if (saveBtn) saveBtn.addEventListener('click', (e) => {
+    e.preventDefault();
+    saveCustomCostsScenario();
+  });
+  
+  if (exportPdfBtn) exportPdfBtn.addEventListener('click', (e) => {
+    e.preventDefault();
+    exportCustomCostsToPDF();
+  });
+});
+
+/* ===== SAVE & EXPORT FUNCTIONS (STUBS) ===== */
+function saveCustomCostsScenario() {
+  if (!currentCustomCostsCrop || !currentCustomCostsScenario) return;
+  
+  const name = prompt('Nombre del escenario:', currentCustomCostsScenario.name);
+  if (!name) return;
+  
+  currentCustomCostsScenario.name = name;
+  currentCustomCostsScenario.lastModified = new ISO8601.toDateString();
+  
+  const result = customCosts.saveScenario(currentCustomCostsCrop, currentCustomCostsScenario);
+  if (result.success) {
+    showToast('✓ Costos guardados exitosamente', 'success', 3000);
+  } else {
+    showToast('✕ Error al guardar: ' + result.error, 'error', 3000);
+  }
+}
+
+function exportCustomCostsToPDF() {
+  if (!currentCustomCostsScenario) return;
+  // TODO: Implement PDF export using jsPDF
+  showToast('Funcionalidad de exportación en desarrollo', 'info', 2000);
+}
+
+ init();
 </script>
 </body>
 </html>
