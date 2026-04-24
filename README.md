@@ -38,5 +38,5 @@ Simplemente abre `AGROMARGEN_2026-27.html` en cualquier navegador moderno. No re
 
 ## Autores
 
-- Rodrigo Quiñonez
+- Rodrigo Quinteros
 - Claudio Razquin
