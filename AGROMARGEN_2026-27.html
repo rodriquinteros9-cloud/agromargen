@@ -1970,7 +1970,16 @@ function getCostRow(ri){
   return BASE_COSTS[ri].v;
 }
 function getCostCol(col){
-  // col index: 0=s1,1=s2,2=tr,3=mt,4=mtard,5=sor,6=gir
+  // Check for active custom costs scenario first
+  const cropKeys = ['s1', 's2', 'tr', 'mt', 'mtard', 'sor', 'gir'];
+  const cropKey = cropKeys[col];
+  const activeCustom = customCosts.getActiveScenario(cropKey);
+  
+  if (activeCustom && activeCustom.totales && activeCustom.totales.gastosDirectos > 0) {
+    return activeCustom.totales.gastosDirectos;
+  }
+  
+  // Fall back to default estimated costs
   let total=0;
   for(let r=0;r<BASE_COSTS.length;r++) total+=getCostRow(r)[col];
   return total;
@@ -5465,18 +5474,15 @@ function exportCustomCostsToPDF() {
   if (!currentCustomCostsScenario) return;
   
   try {
-    const doc = new jsPDF.jsPDF();
+    const doc = new jspdf.jsPDF();
     const pageWidth = doc.internal.pageSize.getWidth();
-    const pageHeight = doc.internal.pageSize.getHeight();
     let yPos = 10;
     
-    // Header
     doc.setFontSize(16);
     doc.setTextColor(47, 91, 55);
     doc.text('COSTOS PERSONALIZADOS', 10, yPos);
     yPos += 8;
     
-    // Metadata
     doc.setFontSize(10);
     doc.setTextColor(80, 97, 114);
     doc.text(`Cultivo: ${currentCustomCostsCrop.toUpperCase()}`, 10, yPos);
@@ -5486,7 +5492,6 @@ function exportCustomCostsToPDF() {
     doc.text(`Fecha: ${new Date(currentCustomCostsScenario.lastModified).toLocaleDateString('es-AR')}`, 10, yPos);
     yPos += 10;
     
-    // Insumos section
     const insumoData = [];
     currentCustomCostsScenario.insumos.herbicidas.forEach(row => {
       insumoData.push([row.nombre, row.tipo, row.cantidad.toFixed(2), row.valorUSD.toFixed(2), row.costoUSD.toFixed(2)]);
@@ -5498,18 +5503,18 @@ function exportCustomCostsToPDF() {
       insumoData.push([row.nombre, row.tipo, row.cantidad.toFixed(2), row.valorUSD.toFixed(2), row.costoUSD.toFixed(2)]);
     });
     
-    doc.autoTable({
-      head: [['Nombre', 'Tipo', 'Cantidad', 'USD/un', 'Costo']],
-      body: insumoData,
-      startY: yPos,
-      margin: 10,
-      styles: { fontSize: 9 },
-      headStyles: { fillColor: [47, 91, 55], textColor: [255, 255, 255] }
-    });
+    if (insumoData.length > 0) {
+      doc.autoTable({
+        head: [['Nombre', 'Tipo', 'Cantidad', 'USD/un', 'Costo']],
+        body: insumoData,
+        startY: yPos,
+        margin: 10,
+        styles: { fontSize: 9 },
+        headStyles: { fillColor: [47, 91, 55], textColor: [255, 255, 255] }
+      });
+      yPos = doc.lastAutoTable.finalY + 5;
+    }
     
-    yPos = doc.lastAutoTable.finalY + 5;
-    
-    // Labores section
     if (currentCustomCostsScenario.labores.length > 0) {
       const laborData = currentCustomCostsScenario.labores.map(row => [
         row.tarea,
@@ -5526,11 +5531,9 @@ function exportCustomCostsToPDF() {
         styles: { fontSize: 9 },
         headStyles: { fillColor: [47, 91, 55], textColor: [255, 255, 255] }
       });
-      
       yPos = doc.lastAutoTable.finalY + 5;
     }
     
-    // Totals section
     doc.setFontSize(11);
     doc.setTextColor(47, 91, 55);
     doc.text('RESUMEN DE COSTOS', 10, yPos);
@@ -5546,13 +5549,12 @@ function exportCustomCostsToPDF() {
     yPos += 5;
     doc.text(`TOTAL GASTOS: ${currentCustomCostsScenario.totales.totalGastos.toFixed(2)} us$/ha`, 10, yPos);
     
-    // Save
     const filename = `Costos_${currentCustomCostsCrop}_${new Date().toISOString().split('T')[0]}.pdf`;
     doc.save(filename);
     showToast('✓ PDF generado exitosamente', 'success', 2000);
   } catch (err) {
     console.error('Error exporting PDF:', err);
-    showToast('✕ Error al generar PDF: ' + err.message, 'error', 3000);
+    showToast('✕ Error al generar PDF', 'error', 3000);
   }
 }
 
