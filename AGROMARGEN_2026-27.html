@@ -52,18 +52,18 @@ body{
 .sidebar { width: 260px; background: var(--surface); border-right: 1px solid var(--line); display: flex; flex-direction: column; flex-shrink: 0; z-index: 50; box-shadow: var(--shadow-sm); overflow-y: auto; -ms-overflow-style: none; scrollbar-width: none; transition: width 0.3s ease, opacity 0.3s ease; }
 .sidebar.collapsed { width: 0 !important; border-right: none !important; opacity: 0; padding: 0 !important; overflow: hidden !important; }
 .sidebar::-webkit-scrollbar { display: none; }
-.sidebar-header { padding: 10px 16px; border-bottom: 1px solid var(--line); }
-.sidebar-logo { font-size: 16px; font-weight: 800; color: var(--brand); display: flex; align-items: center; gap: 8px; letter-spacing: -0.5px; }
-.sidebar-logo-icon { background: var(--brand-light); color: var(--brand); padding: 4px; border-radius: 6px; font-size: 14px; }
+.sidebar-header { padding: 8px 12px; border-bottom: 1px solid var(--line); }
+.sidebar-logo { font-size: 15px; font-weight: 800; color: var(--brand); display: flex; align-items: center; gap: 6px; letter-spacing: -0.5px; }
+.sidebar-logo-icon { background: var(--brand-light); color: var(--brand); padding: 3px; border-radius: 6px; font-size: 13px; }
 .sidebar-subtitle { font-size: 10px; color: var(--ink-muted); margin-top: 2px; font-weight: 600; }
-.sidebar-nav { padding: 8px 10px; overflow-y: auto; display: flex; flex-direction: column; gap: 2px; -ms-overflow-style: none; scrollbar-width: none; }
+.sidebar-nav { padding: 6px 8px; overflow-y: auto; display: flex; flex-direction: column; gap: 1px; -ms-overflow-style: none; scrollbar-width: none; }
 .sidebar-nav::-webkit-scrollbar { display: none; }
-.nav-item { display: flex; align-items: center; gap: 10px; padding: 8px 12px; border-radius: var(--radius-sm); color: var(--ink-soft); font-weight: 600; font-size: 12px; cursor: pointer; transition: all var(--transition-fast); border: none; background: transparent; width: 100%; text-align: left; }
+.nav-item { display: flex; align-items: center; gap: 8px; padding: 6px 10px; border-radius: var(--radius-sm); color: var(--ink-soft); font-weight: 600; font-size: 11px; cursor: pointer; transition: all var(--transition-fast); border: none; background: transparent; width: 100%; text-align: left; }
 .nav-item:hover { background: var(--line-soft); color: var(--ink); }
 .nav-item:focus-visible { outline: 2px solid var(--brand); outline-offset: 2px; background: var(--line-soft); }
 .nav-item.active { background: var(--brand-light); color: var(--brand-dark); font-weight: 700; }
-.nav-item-icon { font-size: 14px; opacity: 0.8; }
-.sidebar-footer { padding: 10px 14px; border-top: 1px solid var(--line); background: #fcfcfc; }
+.nav-item-icon { font-size: 13px; opacity: 0.8; }
+.sidebar-footer { padding: 8px 12px; border-top: 1px solid var(--line); background: #fcfcfc; }
 .main-content { flex: 1; display: flex; flex-direction: column; overflow-y: auto; overflow-x: hidden; background: var(--surface-app); }
 .topbar-dash { background: var(--surface); padding: 16px 24px; border-bottom: 1px solid var(--line); display: flex; justify-content: space-between; align-items: center; position: sticky; top: 0; z-index: 40; }
 .content-wrapper { padding: 24px; max-width: 1400px; margin: 0 auto; width: 100%; }
@@ -672,21 +672,21 @@ td.ed:focus-within, td.cedit:focus-within {
       <button class="nav-item" onclick="switchTab('tab-sens')" id="nav-sens"><span class="nav-item-icon">📊</span> Sensibilidad</button>
     </nav>
     <div class="sidebar-footer">
-      <div class="producer-chip" id="hdrProducer" style="color:var(--ink-soft);font-weight:700;font-size:10px;margin-bottom:8px;padding:4px 10px;background:var(--line-soft);border-radius:6px;border:1px solid var(--line)">Productor: no definido</div>
-      <div style="display:flex;gap:6px;flex-wrap:wrap;margin-bottom:10px">
-        <button class="btn" onclick="openSaveScenarioModal()" style="font-size:10px;padding:6px 10px;flex:1;background:var(--surface);border:1px solid var(--line);color:var(--ink-soft)">💾 Guardar</button>
-        <button class="btn" onclick="openLoadScenarioModal()" style="font-size:10px;padding:6px 10px;flex:1;background:var(--surface);border:1px solid var(--line);color:var(--ink-soft)">📂 Cargar</button>
+      <div class="producer-chip" id="hdrProducer" style="color:var(--ink-soft);font-weight:700;font-size:10px;margin-bottom:6px;padding:3px 8px;background:var(--line-soft);border-radius:6px;border:1px solid var(--line)">Productor: no definido</div>
+      <div style="display:flex;gap:4px;flex-wrap:wrap;margin-bottom:8px">
+        <button class="btn" onclick="openSaveScenarioModal()" style="font-size:10px;padding:4px 8px;flex:1;background:var(--surface);border:1px solid var(--line);color:var(--ink-soft)">💾 Guardar</button>
+        <button class="btn" onclick="openLoadScenarioModal()" style="font-size:10px;padding:4px 8px;flex:1;background:var(--surface);border:1px solid var(--line);color:var(--ink-soft)">📂 Cargar</button>
       </div>
-      <div style="border-top:1px solid var(--line); padding-top:10px;">
-        <span style="font-size:9px; font-weight:800; color:var(--ink-muted); display:block; margin-bottom:6px; text-transform:uppercase; letter-spacing:0.5px">Exportar Análisis</span>
-        <div style="display:flex;flex-direction:column;gap:4px">
-          <button class="btn green" onclick="exportExcel()" style="font-size:10px; justify-content:flex-start; width:100%; padding:6px 10px;">📥 Excel (Todos los datos)</button>
-          <button class="btn orange" onclick="openPDFModal()" style="font-size:10px; justify-content:flex-start; width:100%; padding:6px 10px;">📄 PDF (Informe Ejecutivo)</button>
-          <button class="btn" onclick="openCropSheetModal()" style="font-size:10px; justify-content:flex-start; width:100%; border:1px solid var(--line); background:var(--surface); color:var(--ink-soft); padding:6px 10px;">🧾 PDF (Ficha Cultivo)</button>
+      <div style="border-top:1px solid var(--line); padding-top:8px;">
+        <span style="font-size:9px; font-weight:800; color:var(--ink-muted); display:block; margin-bottom:4px; text-transform:uppercase; letter-spacing:0.5px">Exportar Análisis</span>
+        <div style="display:flex;flex-direction:column;gap:3px">
+          <button class="btn green" onclick="exportExcel()" style="font-size:10px; justify-content:flex-start; width:100%; padding:4px 8px;">📥 Excel (Todos los datos)</button>
+          <button class="btn orange" onclick="openPDFModal()" style="font-size:10px; justify-content:flex-start; width:100%; padding:4px 8px;">📄 PDF (Informe Ejecutivo)</button>
+          <button class="btn" onclick="openCropSheetModal()" style="font-size:10px; justify-content:flex-start; width:100%; border:1px solid var(--line); background:var(--surface); color:var(--ink-soft); padding:4px 8px;">🧾 PDF (Ficha Cultivo)</button>
         </div>
       </div>
-      <div style="margin-top:10px;">
-         <button class="btn" onclick="goHome()" style="font-size:10px;padding:6px 10px;width:100%;background:var(--surface);border:1px solid var(--line);color:var(--ink-soft)">← Volver al Inicio</button>
+      <div style="margin-top:8px;">
+         <button class="btn" onclick="goHome()" style="font-size:10px;padding:4px 8px;width:100%;background:var(--surface);border:1px solid var(--line);color:var(--ink-soft)">← Volver al Inicio</button>
       </div>
     </div>
   </aside>
@@ -1531,6 +1531,18 @@ let cur="San Justo";
 const PR_BASE={soja:314.10,trigo:200,maizT:190,maizTard:190,sorgo:195,girasol:405};
 let PR={...PR_BASE};
 
+// Quality state for each crop (must be before getQualAdjPct)
+const QUAL_DEFAULT={
+  tr:{ph:78, me:0.5, ardidos:0.8, totDan:1.5, carbon:0.15, panzaBlanca:20, picados:0.8,
+      humedad:13.5, proteina:11, trebol:5},
+  gir:{matGrasa:42, acidez:1.5, me:0, humedad:11, chamico:0,
+       periodo:'ago'}
+};
+let qualState={
+  tr:{...QUAL_DEFAULT.tr},
+  gir:{...QUAL_DEFAULT.gir}
+};
+
 function getQualAdjPct(cropKey) {
   if (cropKey === 'trigo' && typeof qualState !== 'undefined' && qualState.tr) {
     const s = qualState.tr;
@@ -2276,7 +2288,7 @@ function resetScenarioBase(){
   ur={};
   PR={...PR_BASE};
   advCosts=null; advFlete=null; advKm=null; advArr=null; advArrByCrop=null;
-allocHas={s1:0,ts:0,tr:0,mt:0,mtard:0,sor:0,gir:0};
+  allocHas={s1:0,ts:0,tr:0,mt:0,mtard:0,sor:0,gir:0};
   allocPct={s1:0,ts:0,tr:0,mt:0,mtard:0,sor:0,gir:0};
   cobData={};
   resetQualityState();
@@ -2498,66 +2510,6 @@ function onAllocPctChange(key,pct,has){
   allocHas[key]=Math.round(p*has/100);
   const res=compute();
   const crops=DEC_CROPS.map(c=>({...c,...res[c.key]}));
-  // Update ha display
-  const hasEl=document.getElementById(`allocHas_${key}`);
-  if(hasEl) hasEl.textContent=allocHas[key];
-  // Update individual RE label
-  const crop=crops.find(c=>c.key===key);
-  if(crop){
-    const tot=Math.round(crop.RE*allocHas[key]);
-    const el=document.getElementById(`allocRE_${key}`);
-    if(el) el.textContent=allocHas[key]>0?(tot>=0?'+':'')+tot.toLocaleString('es-AR'):'-';
-    if(el) el.style.color=tot>=0?'#15803d':'#dc2626';
-  }
-  updateAllocTotals(crops,has);
-}
-
-function updateAllocTotals(crops,has){
-  let totalRE=0,totalMB=0,totalInv=0,totalPctUsed=0,weightedRentNum=0;
-  crops.forEach(c=>{
-    const p=allocPct[c.key]||0;
-    const h=Math.round(p*has/100);
-    allocHas[c.key]=h;
-    totalRE+=c.RE*h;
-    totalMB+=c.MB*h;
-    totalInv+=c.inv*h;
-    totalPctUsed+=p;
-    weightedRentNum+=c.Rent*c.inv*h;
-  });
-  const avgRent=totalInv>0?weightedRentNum/totalInv:0;
-  const pct=Math.min(100,totalPctUsed);
-  const over=totalPctUsed>100;
-  document.getElementById('allocBar').style.width=Math.min(100,pct)+'%';
-  document.getElementById('allocBar').style.background=over?'#dc2626':'#0e7c5a';
-  document.getElementById('hasUsed').textContent=Math.round(totalPctUsed).toLocaleString('es-AR')+'%';
-  document.getElementById('hasTotal').textContent='100%';
-  const st=document.getElementById('hasStatus');
-  if(over){st.textContent=`⚠ Excedés por ${Math.round(totalPctUsed-100)}%`;st.style.color='#dc2626';}
-  else if(totalPctUsed>0){const rem=100-totalPctUsed;st.textContent=rem>0.5?`Qeda ${Math.round(rem)}% sin usar`:'✓ Todo asignado';st.style.color=rem>0.5?'#b45309':'#15803d';}
-  else{st.textContent='';st.style.color='';}
-  const fmt=v=>v>=0?'USD '+Math.round(v).toLocaleString('es-AR'):'−USD '+Math.round(Math.abs(v)).toLocaleString('es-AR');
-  document.getElementById('totRE').textContent=totalPctUsed>0?fmt(totalRE):'—';
-  document.getElementById('totRE').style.color=totalRE>=0?'#0e7c5a':'#dc2626';
-  document.getElementById('totMB').textContent=totalPctUsed>0?fmt(totalMB):'—';
-  document.getElementById('totMB').style.color=totalMB>=0?'#0e7c5a':'#dc2626';
-  document.getElementById('totInv').textContent=totalPctUsed>0?'USD '+Math.round(totalInv).toLocaleString('es-AR'):'—';
-  document.getElementById('totRent').textContent=totalPctUsed>0?fp(avgRent):'—';
-  document.getElementById('totRent').style.color=avgRent>0.001?'#0e7c5a':avgRent<-0.001?'#dc2626':'#555';
-}
-
-function onAllocChange(key,val){
-  allocHas[key]=Math.max(0,parseFloat(val)||0);
-  const res=compute();
-  const crops=DEC_CROPS.map(c=>({...c,...res[c.key]}));
-  const has=Math.max(1,parseFloat(document.getElementById('hasInput').value)||100);
-  // Update individual RE label
-  const crop=crops.find(c=>c.key===key);
-  if(crop){
-    const tot=Math.round(crop.RE*allocHas[key]);
-    const el=document.getElementById(`allocRE_${key}`);
-    if(el) el.textContent=allocHas[key]>0?(tot>=0?'+':'')+tot.toLocaleString('es-AR'):'-';
-    if(el) el.style.color=tot>=0?'#15803d':'#dc2626';
-  }
   updateAllocTotals(crops,has);
 }
 
@@ -3429,16 +3381,8 @@ function toggleHelpQual(){
 let qualCrop='tr';
 
 // Quality state for each crop
-const QUAL_DEFAULT={
-  tr:{ph:78, me:0.5, ardidos:0.8, totDan:1.5, carbon:0.15, panzaBlanca:20, picados:0.8,
-      humedad:13.5, proteina:11, trebol:5},
-  gir:{matGrasa:42, acidez:1.5, me:0, humedad:11, chamico:0,
-       periodo:'ago'} // ago=hasta 31/ago, sep=desde 1/sep
-};
-const qualState={
-  tr:{...QUAL_DEFAULT.tr},
-  gir:{...QUAL_DEFAULT.gir}
-};
+// (Declaration moved to the top)
+
 function resetQualityState(){
   qualState.tr={...QUAL_DEFAULT.tr};
   qualState.gir={...QUAL_DEFAULT.gir};
@@ -4760,7 +4704,7 @@ function enterTool(){
   document.body.classList.remove('home-active');
   document.body.classList.add('tool-active');
   if(home) home.style.display='none';
-  if(app) app.style.display='block';
+  if(app) app.style.display='flex';
   window.scrollTo(0,0);
 }
 
