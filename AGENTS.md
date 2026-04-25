@@ -4,16 +4,17 @@
 
 ```
 Margenes/
- ├── .agents/skills/           # OpenCode skills (9 installed)
+├── .agents/skills/           # OpenCode skills (9 installed)
 ├── AGROMARGEN_2026-27.html   # Main application (244KB)
-├── AGENTS.md                # This file
-├── README.md                # Project documentation
-└── skills-lock.json         # Installed skills tracking
+├── AGENTS.md                 # This file
+├── README.md                 # Project documentation
+└── skills-lock.json          # Installed skills tracking
 ```
 
 ## Main application (AGROMARGEN_2026-27.html)
 
 Single-file SPA for agricultural economic analysis. No build system - open directly in browser.
+All unnecessary development and testing scripts have been removed to keep the repository clean and focused on the core application.
 
 ### Features
 - **7 Crops/sequences:**
@@ -25,7 +26,7 @@ Single-file SPA for agricultural economic analysis. No build system - open direc
   - Sorgo
   - Girasol
 - **Analysis tools:**
-  - Decision panel (rentabilidad por hectare)
+  - Decision panel (rentabilidad por hectárea)
   - Break-even analysis (punto de equilibrio)
   - Quality bonifications (bonificaciones por calidad)
   - Price coverage (cobertura de precios)
@@ -65,42 +66,6 @@ Single-file SPA for agricultural economic analysis. No build system - open direc
 | `supabase-postgres-best-practices` | Postgres optimization best practices | vercel-labs/supabase-postgres-best-practices |
 | `context7-mcp` | Library/API references and code examples | context7 MCP |
 | `find-skills` | Discover/install agent skills | anthropics/skills |
-
-### Skills structure
-
-- **brainstorming/**
-  - SKILL.md
-  - visual-companion.md
-  - spec-document-reviewer-prompt.md
-  - scripts/
-
-- **skill-creator/**
-  - SKILL.md
-  - LICENSE.txt
-  - agents/
-  - assets/
-  - eval-viewer/
-  - references/
-  - scripts/
-
-- **agent-browser/**
-  - SKILL.md
-- **frontend-design/**
-  - SKILL.md
-- **context7-mcp/**
-  - SKILL.md
-- **find-skills/**
-  - SKILL.md
-- **supabase/**
-  - SKILL.md
-- **supabase-postgres-best-practices/**
-  - SKILL.md
-
-- **systematic-debugging/**
-  - SKILL.md
-  - CREATION-LOG.md
-  - test-pressure-*.md
-  - condition-based-waiting*.ts
 
 ## Development
 

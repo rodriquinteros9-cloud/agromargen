@@ -26,7 +26,7 @@ Calculadora de márgenes agrícolas para la campaña 2026-27 en Argentina.
 
 ## Uso
 
-Simplemente abre `AGROMARGEN_2026-27.html` en cualquier navegador moderno. No requiere instalación ni servidor.
+Simplemente abre `AGROMARGEN_2026-27.html` en cualquier navegador moderno. No requiere instalación ni servidor. Es una Single-Page Application sin dependencias de build.
 
 ## Tecnologías
 

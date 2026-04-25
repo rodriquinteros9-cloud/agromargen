@@ -14,39 +14,64 @@
 <script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf-autotable/3.8.2/jspdf.plugin.autotable.min.js"></script>
 <style>
 :root{
-  --ink:#15202b;
-  --ink-soft:#506172;
-  --brand:#2f5b37;
-  --brand-2:#7a5a2d;
-  --surface:#ffffff;
-  --surface-soft:#f6f8f2;
-  --line:#d7e2d2;
-  --ok:#0d8a5f;
-  --warn:#c96b11;
-  --bad:#cf3b2e;
-  --radius-sm:8px;
-  --radius-md:12px;
-  --radius-lg:16px;
-  --shadow:0 12px 30px rgba(15,34,51,.14);
-  --shadow-sm:0 4px 12px rgba(15,34,51,.08);
-  --shadow-lg:0 20px 50px rgba(15,34,51,.18);
-  --transition-fast:0.15s ease;
-  --transition-med:0.25s ease;
-  --transition-slow:0.4s cubic-bezier(0.4,0,0.2,1);
-  --grain-opacity:0.03;
+  --brand: #059669;
+  --brand-dark: #047857;
+  --brand-light: #ecfdf5;
+  --ink: #0f172a;
+  --ink-soft: #475569;
+  --ink-muted: #94a3b8;
+  --surface: #ffffff;
+  --surface-app: #f8fafc;
+  --line: #e2e8f0;
+  --line-soft: #f1f5f9;
+  --ok: #10b981;
+  --warn: #f59e0b;
+  --bad: #ef4444;
+  --radius-sm: 6px;
+  --radius-md: 8px;
+  --radius-lg: 16px;
+  --shadow-sm: 0 1px 2px 0 rgba(0, 0, 0, 0.05);
+  --shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.08), 0 2px 4px -1px rgba(0, 0, 0, 0.04);
+  --shadow-lg: 0 10px 15px -3px rgba(0, 0, 0, 0.08), 0 4px 6px -2px rgba(0, 0, 0, 0.04);
+  --transition-fast: 0.15s ease;
+  --transition-med: 0.25s ease;
 }
-
 *,*::before,*::after{box-sizing:border-box;margin:0;padding:0}
-
-@keyframes fadeSlideUp{from{opacity:0;transform:translateY(16px)}to{opacity:1;transform:translateY(0)}}
-@keyframes fadeSlideDown{from{opacity:0;transform:translateY(-8px)}to{opacity:1;transform:translateY(0)}}
-@keyframes scaleIn{from{opacity:0;transform:scale(0.95)}to{opacity:1;transform:scale(1)}}
-@keyframes pulse{0%,100%{opacity:1}50%{opacity:0.6}}
-@keyframes shimmer{from{background-position:-200% 0}to{background-position:200% 0}}
-@keyframes panelReveal{from{opacity:0;transform:translateY(24px)}to{opacity:1;transform:translateY(0)}}
-@keyframes panelCollapse{from{opacity:1;transform:translateY(0)}to{opacity:0;transform:translateY(-12px)}}
-
-body{font-family:'Manrope',sans-serif;font-size:13px;background:radial-gradient(circle at 12% 8%,#f4f8ef 0,#eef4e8 34%,#f5f7f2 68%,#f7f8f4 100%);color:var(--ink);padding:22px}
+body{
+  font-family:'Manrope',sans-serif;
+  font-size:13px;
+  background:var(--surface-app);
+  color:var(--ink);
+  overflow-x: hidden;
+}
+::-webkit-scrollbar { width: 8px; height: 8px; }
+::-webkit-scrollbar-track { background: var(--surface-app); }
+::-webkit-scrollbar-thumb { background: #cbd5e1; border-radius: 4px; }
+::-webkit-scrollbar-thumb:hover { background: #94a3b8; }
+.dashboard-layout { display: flex; height: 100%; width: 100%; overflow: hidden; }
+.sidebar { width: 260px; background: var(--surface); border-right: 1px solid var(--line); display: flex; flex-direction: column; flex-shrink: 0; z-index: 50; box-shadow: var(--shadow-sm); overflow-y: auto; -ms-overflow-style: none; scrollbar-width: none; transition: width 0.3s ease, opacity 0.3s ease; }
+.sidebar.collapsed { width: 0 !important; border-right: none !important; opacity: 0; padding: 0 !important; overflow: hidden !important; }
+.sidebar::-webkit-scrollbar { display: none; }
+.sidebar-header { padding: 10px 16px; border-bottom: 1px solid var(--line); }
+.sidebar-logo { font-size: 16px; font-weight: 800; color: var(--brand); display: flex; align-items: center; gap: 8px; letter-spacing: -0.5px; }
+.sidebar-logo-icon { background: var(--brand-light); color: var(--brand); padding: 4px; border-radius: 6px; font-size: 14px; }
+.sidebar-subtitle { font-size: 10px; color: var(--ink-muted); margin-top: 2px; font-weight: 600; }
+.sidebar-nav { padding: 8px 10px; overflow-y: auto; display: flex; flex-direction: column; gap: 2px; -ms-overflow-style: none; scrollbar-width: none; }
+.sidebar-nav::-webkit-scrollbar { display: none; }
+.nav-item { display: flex; align-items: center; gap: 10px; padding: 8px 12px; border-radius: var(--radius-sm); color: var(--ink-soft); font-weight: 600; font-size: 12px; cursor: pointer; transition: all var(--transition-fast); border: none; background: transparent; width: 100%; text-align: left; }
+.nav-item:hover { background: var(--line-soft); color: var(--ink); }
+.nav-item:focus-visible { outline: 2px solid var(--brand); outline-offset: 2px; background: var(--line-soft); }
+.nav-item.active { background: var(--brand-light); color: var(--brand-dark); font-weight: 700; }
+.nav-item-icon { font-size: 14px; opacity: 0.8; }
+.sidebar-footer { padding: 10px 14px; border-top: 1px solid var(--line); background: #fcfcfc; }
+.main-content { flex: 1; display: flex; flex-direction: column; overflow-y: auto; overflow-x: hidden; background: var(--surface-app); }
+.topbar-dash { background: var(--surface); padding: 16px 24px; border-bottom: 1px solid var(--line); display: flex; justify-content: space-between; align-items: center; position: sticky; top: 0; z-index: 40; }
+.content-wrapper { padding: 24px; max-width: 1400px; margin: 0 auto; width: 100%; }
+.tab-pane { display: none; animation: fadeSlideUp 0.4s ease-out forwards; }
+.tab-pane.active { display: block; }
+.sum-card, .ux-step, .home-box, .home-module, .home-crop, .home-stat, #decPanel, #bePanel, #qualPanel, #cobPanel, #sensPanel { padding: 24px !important; border: 1px solid var(--line) !important; box-shadow: var(--shadow-sm) !important; border-radius: var(--radius-md) !important; background: var(--surface) !important; }
+.sum-card:hover, .home-box:hover, .home-module:hover, .home-crop:hover, .home-stat:hover { box-shadow: var(--shadow) !important; border-color: #cbd5e1 !important; transform: translateY(-2px) !important; }
+/* Removed hover from main panels as it looks weird for a whole page to hover */
 input,button,select,textarea{font-family:'Manrope',sans-serif!important}
 .wrap{max-width:1220px;margin:0 auto;background:var(--surface);box-shadow:var(--shadow);border-radius:var(--radius-lg);overflow:hidden;border:1px solid #dbe4ec}
 .home-wrap{max-width:1080px;margin:0 auto;background:var(--surface);box-shadow:var(--shadow);border-radius:var(--radius-lg);overflow:hidden;border:1px solid #dbe4ec}
@@ -122,11 +147,12 @@ input,button,select,textarea{font-family:'Manrope',sans-serif!important}
 .home-usecase h5{font-size:12px;color:#0e7c5a;margin-bottom:8px;font-weight:700}
 .home-usecase p{font-size:11px;color:#48634d;line-height:1.5}
 
+body.home-active { overflow-y: auto !important; }
 body.home-active #homeScreen{display:block!important}
 body.home-active #appShell{display:none!important}
-body.home-active .export-bar{display:none!important}
+body.tool-active { overflow: hidden !important; position: fixed; top: 0; left: 0; right: 0; bottom: 0; }
 body.tool-active #homeScreen{display:none!important}
-body.tool-active #appShell{display:block!important}
+body.tool-active #appShell{display:flex!important}
 
 @keyframes floatOrb{0%,100%{transform:translateY(0)}50%{transform:translateY(12px)}}
 /* HEADER */
@@ -190,22 +216,15 @@ body.tool-active #appShell{display:block!important}
 .sum-head{display:flex;justify-content:space-between;align-items:center;gap:8px;margin-bottom:8px;flex-wrap:wrap}
 .sum-head h3{font-size:12px;color:#244862}
 .sum-head span{font-size:10px;color:#62788a}
-.sum-grid{display:grid;grid-template-columns:1.4fr 1fr;gap:10px}
-.sum-card{background:linear-gradient(180deg,#fff 0%,#fafcfa 100%);border:1px solid #d7e3ed;border-radius:12px;padding:14px;box-shadow:var(--shadow-sm);transition:all var(--transition-med)}
+.sum-grid{display:grid;grid-template-columns:1.4fr 1fr;gap:10px;min-width:0}
+.sum-card{background:linear-gradient(180deg,#fff 0%,#fafcfa 100%);border:1px solid #d7e3ed;border-radius:12px;padding:14px;box-shadow:var(--shadow-sm);transition:all var(--transition-med);min-width:0;box-sizing:border-box}
 .sum-card:hover{transform:translateY(-2px);box-shadow:var(--shadow);border-color:#a8d4a8}
 .sum-card h4{font-size:12px;color:#35556e;margin-bottom:10px;font-weight:700}
 .sum-tools{display:flex;justify-content:flex-end;gap:6px;margin-bottom:8px}
 .sum-tools button{padding:4px 8px;border:1px solid #b8c6d2;background:#fff;border-radius:6px;font-size:10px;font-weight:700;color:#35556e;cursor:pointer}
 .sum-tools button.active{background:#1f7ca8;color:#fff;border-color:#1f7ca8}
 
-body.presentation-mode .note,
-body.presentation-mode .ux-steps,
-body.presentation-mode .tbl-sc,
-body.presentation-mode #qualPanel,
-body.presentation-mode #cobPanel,
-body.presentation-mode #sensPanel,
-body.presentation-mode .btn.present-hide{display:none!important}
-body.presentation-mode .sum-wrap{padding-top:14px}
+
 /* MAIN TABLE */
 .tbl-sc{overflow-x:auto}
 table.mt{width:100%;border-collapse:collapse;font-size:12px}
@@ -227,7 +246,7 @@ table.mt tr.rt td{background:var(--brand);color:#fff;font-weight:700;font-size:1
 table.mt tr.rt td.lc{color:#fff;text-align:left}
 input.ci{background:transparent;border:none;outline:none;text-align:right;width:68px;font-size:12px;color:#0c6a90;font-weight:700;transition:all var(--transition-fast);border-radius:4px}
 input.ci:focus{background:#e8f4ff;box-shadow:inset 0 0 0 2px #0c6a90;padding:2px 4px}
-td.ed{background:#cce8ff;transition:background var(--transition-fast)}
+td.ed{background:#cce8ff;transition:background var(--transition-fast);border-left:3px solid #0c6a90 !important}
 td.ed:focus-within{background:#a8d8f9;box-shadow:inset 0 0 0 2px #0c6a90}
 .pos{color:#15803d;font-weight:700}
 .neg{color:#dc2626;font-weight:700}
@@ -269,12 +288,12 @@ table.ct td.cedit:focus-within{background:#9dd8f9}
 @media(max-width:480px){.sgrid{grid-template-columns:1fr}}
 .sbox{border:1px solid #c5cdd9;border-radius:8px;overflow:hidden;box-shadow:var(--shadow-sm);transition:transform var(--transition-med),box-shadow var(--transition-med)}
 .sbox:hover{transform:translateY(-2px);box-shadow:var(--shadow)}
-.sbox h4{background:linear-gradient(135deg,#1a3a6b 0%,#2a4a8b 100%);color:#fff;padding:6px 12px;font-size:11px;font-weight:700;letter-spacing:.3px}
+.sbox h4{background:linear-gradient(135deg,#1a3a6b 0%,#2a4a8b 100%);color:#fff;padding:8px 14px;font-size:11px;font-weight:700;letter-spacing:.3px}
 .sbox .sub{font-size:9px;padding:5px 12px;background:#eef0f8;color:#555;border-bottom:1px solid #c5cdd9;font-weight:500}
 .sbox table{width:100%;border-collapse:collapse;font-size:11px;table-layout:fixed;empty-cells:show}
-.sbox th{background:#e8eef5;padding:6px 2px;border:1px solid #c5cdd9;font-weight:700;text-align:center;font-size:10px;color:#333;min-width:60px}
-.sbox th:first-child{min-width:65px}
-.sbox td{padding:5px 2px;border:1px solid #c5cdd9;text-align:center;vertical-align:middle;font-size:11px;min-width:60px;white-space:nowrap}
+.sbox th{background:#e8eef5;padding:7px 4px;border:1px solid #c5cdd9;font-weight:700;text-align:center;font-size:10px;color:#333;min-width:64px}
+.sbox th:first-child{min-width:68px}
+.sbox td{padding:6px 4px;border:1px solid #c5cdd9;text-align:center;vertical-align:middle;font-size:11px;min-width:64px;white-space:nowrap}
 
 /* SP/SN classes - same for both modes */
 .sp{background:#d1fae5 !important;color:#065f46 !important;font-weight:700}
@@ -416,6 +435,169 @@ table.ct td.cedit:focus-within{background:#9dd8f9}
 .be-mx td.mxh{background:#eff6ff;font-weight:700;color:#1d4ed8;text-align:right;padding-right:6px;white-space:nowrap}
 .be-mx tr:hover td{filter:brightness(.97)}
 .be-wf-bar{transition:all .3s ease}
+
+/* --- PHASE 4: AGTECH UI POLISH --- */
+/* Tables — scoped to main data table only, NOT sub-panels */
+.tbl-sc table.mt, table.ag-table { width: 100%; border-collapse: collapse; }
+.tbl-sc table.mt th { 
+  background: var(--line-soft); 
+  color: var(--ink-soft); 
+  font-weight: 700; 
+  font-size: 11px; 
+  text-transform: uppercase; 
+  letter-spacing: 0.5px; 
+  border: none; 
+  border-bottom: 2px solid var(--line); 
+  padding: 12px 16px; 
+}
+.tbl-sc table.mt td { 
+  border: none; 
+  border-bottom: 1px solid var(--line); 
+  padding: 10px 16px; 
+  color: var(--ink); 
+  font-size: 13px;
+}
+.tbl-sc table.mt tbody tr:hover td { 
+  background: var(--surface-app); 
+}
+
+/* Topbar & sidebar inputs — scoped */
+.topbar select, .topbar input, .prod-input, .sidebar-footer input, .sidebar-footer select { 
+  border: 1px solid var(--line); 
+  border-radius: var(--radius-sm); 
+  padding: 8px 12px; 
+  font-family: 'Manrope', sans-serif; 
+  font-size: 13px; 
+  transition: all var(--transition-fast); 
+  outline: none; 
+  background: var(--surface); 
+  color: var(--ink);
+}
+.topbar select:focus, .topbar input:focus, .prod-input:focus { 
+  border-color: var(--brand); 
+  box-shadow: 0 0 0 3px var(--brand-light); 
+}
+
+/* Base Buttons Polish */
+.btn { 
+  border-radius: var(--radius-sm) !important; 
+  font-weight: 600 !important; 
+  transition: all var(--transition-fast) !important; 
+  cursor: pointer; 
+  display: inline-flex; 
+  align-items: center; 
+  justify-content: center; 
+  gap: 6px; 
+  box-shadow: var(--shadow-sm) !important; 
+}
+.btn:hover { 
+  transform: translateY(-1px); 
+  box-shadow: var(--shadow) !important; 
+  filter: brightness(1.05); 
+}
+.btn:active { 
+  transform: translateY(0); 
+}
+
+/* Main Dashboard Elements padding fixes */
+.content-wrapper > section > div {
+  margin-bottom: 24px;
+}
+.home-box, .sum-card, .ux-step, .home-module {
+  padding: 24px !important;
+}
+h2, h3 {
+  color: var(--ink);
+  letter-spacing: -0.5px;
+}
+h2 { font-size: 20px; font-weight: 800; margin-bottom: 16px; }
+h3 { font-size: 16px; font-weight: 700; margin-bottom: 12px; }
+
+/* Panel table radius — does NOT override th/td colors */
+#decPanel table, #bePanel table, #cobPanel table, #sensPanel table {
+  border-radius: var(--radius-md);
+  overflow: hidden;
+}
+
+/* --- STEP 4: AGTECH CORPORATE OVERRIDES --- */
+table.mt th, table.ct th {
+  background: var(--line-soft) !important;
+  color: var(--ink-soft) !important;
+  font-size: 11px !important;
+  font-weight: 700 !important;
+  text-transform: uppercase !important;
+  letter-spacing: 0.5px !important;
+  border: none !important;
+  border-bottom: 2px solid var(--line) !important;
+  padding: 8px 6px !important;
+}
+table.mt th.lh, table.mt th.uh, table.ct th.lh {
+  min-width: 0 !important;
+}
+#cobInputTable th, #cobResultTable th, .sbox th {
+  background: var(--line-soft) !important;
+  color: var(--ink-soft) !important;
+  font-size: 11px !important;
+  font-weight: 700 !important;
+  text-transform: uppercase !important;
+  letter-spacing: 0.5px !important;
+  border: none !important;
+  border-bottom: 2px solid var(--line) !important;
+  padding: 8px 6px !important;
+}
+table.mt td, table.ct td {
+  border: none !important;
+  border-bottom: 1px solid var(--line) !important;
+  color: var(--ink) !important;
+  padding: 8px 6px !important;
+}
+#cobInputTable td, #cobResultTable td, .sbox td {
+  border: none !important;
+  border-bottom: 1px solid var(--line) !important;
+  color: var(--ink) !important;
+  padding: 8px 6px !important;
+}
+table.mt tbody tr:hover td, table.ct tbody tr:hover td, #cobInputTable tbody tr:hover td, #cobResultTable tbody tr:hover td, .sbox tbody tr:hover td {
+  background: var(--surface-app) !important;
+}
+table.mt tr.sh td, .cob-sec-hdr td, .cob-rent-row td {
+  background: var(--line-soft) !important;
+  color: var(--ink-soft) !important;
+  border-bottom: 2px solid var(--line) !important;
+  font-weight: 700 !important;
+}
+
+/* Inputs & Editable Cells */
+input.ci, input.ce, .cob-inp {
+  background: var(--surface) !important;
+  border: 1px solid var(--line) !important;
+  border-radius: 4px !important;
+  color: var(--ink) !important;
+  padding: 4px 6px !important;
+  width: 68px !important;
+  box-sizing: border-box !important;
+}
+input.ci:focus, input.ce:focus, .cob-inp:focus {
+  border-color: var(--brand) !important;
+  box-shadow: 0 0 0 2px var(--brand-light) !important;
+  background: var(--surface) !important;
+}
+td.ed, td.cedit {
+  background: transparent !important;
+  border-left: 3px solid var(--brand) !important;
+}
+td.ed:focus-within, td.cedit:focus-within {
+  background: var(--brand-light) !important;
+  box-shadow: none !important;
+}
+
+/* Buttons */
+.btn {
+  border-radius: 6px !important;
+  box-shadow: none !important;
+  font-weight: 600 !important;
+}
+
 </style>
 </head>
 <body>
@@ -423,193 +605,117 @@ table.ct td.cedit:focus-within{background:#9dd8f9}
 <div class="home-wrap" id="homeScreen">
   <div class="home-hero">
     <div>
-      <h1>AGROMARGEN</h1>
-      <p>Plataforma de análisis económico agrícola para evaluar cultivos y secuencias con foco en rentabilidad, estructura de costos, riesgo de precio y toma de decisiones comerciales.</p>
+      <h1 style="font-size: 42px; margin-bottom: 16px;">AGROMARGEN 2026/27</h1>
+      <p style="font-size: 16px; opacity: 0.9; margin-bottom: 24px; line-height: 1.5; max-width: 500px;">Plataforma analítica profesional para la gestión agrícola. Evalúe rentabilidad, proyecte escenarios y tome decisiones comerciales con datos precisos.</p>
+      <button class="btn" onclick="enterTool()" style="padding: 14px 32px; font-size: 14px; background: var(--surface); color: var(--brand-dark); border: none; font-weight: 800; border-radius: 8px; box-shadow: var(--shadow); cursor: pointer; transition: transform 0.2s ease;">Ingresar al Dashboard →</button>
     </div>
-    <div class="home-card">
-      <b>¿Qué vas a poder hacer?</b>
-      <span>• Simular márgenes por cultivo/secuencia</span>
-      <span>• Ajustar costos y alquileres por tu campo</span>
-      <span>• Ver sensibilidad, equilibrio y cobertura</span>
-      <span>• Exportar informes ejecutivos en PDF y Excel</span>
+    <div class="home-card" style="background: rgba(255,255,255,0.1); border: 1px solid rgba(255,255,255,0.2); padding: 24px;">
+      <b style="font-size: 14px; margin-bottom: 16px;">Capacidades Integradas</b>
+      <div style="display: flex; flex-direction: column; gap: 12px; font-size: 13px;">
+        <span style="display: flex; align-items: center; gap: 8px;">🌱 <span>Ranking de 7 cultivos y secuencias</span></span>
+        <span style="display: flex; align-items: center; gap: 8px;">⚖️ <span>Análisis de Punto de Equilibrio</span></span>
+        <span style="display: flex; align-items: center; gap: 8px;">🏆 <span>Calculadora de Bonificaciones</span></span>
+        <span style="display: flex; align-items: center; gap: 8px;">📈 <span>Estrategias de Cobertura de Precios</span></span>
+        <span style="display: flex; align-items: center; gap: 8px;">📊 <span>Matrices de Sensibilidad</span></span>
+        <span style="display: flex; align-items: center; gap: 8px;">📄 <span>Exportación a PDF Ejecutivo y Excel</span></span>
+      </div>
     </div>
   </div>
-  <div class="home-body">
-    <div class="home-stats">
-      <div class="home-stat"><b>7</b><span>Cultivos y secuencias</span></div>
-      <div class="home-stat"><b>5+</b><span>Módulos de análisis</span></div>
-      <div class="home-stat"><b>PDF</b><span>Reportes ejecutivos</span></div>
-      <div class="home-stat"><b>Excel</b><span>Salida para gestión</span></div>
+  
+  <div class="home-body" style="padding: 40px; background: var(--surface-app);">
+    <div style="text-align: center; margin-bottom: 40px;">
+      <h2 style="color: var(--ink); font-size: 24px; font-weight: 800; margin-bottom: 12px;">Solución Integral para Productores y Asesores</h2>
+      <p style="color: var(--ink-soft); font-size: 15px; max-width: 650px; margin: 0 auto; line-height: 1.6;">Agromargen consolida todas las variables técnicas y comerciales en un único entorno interactivo de ejecución local, garantizando la privacidad de sus datos.</p>
     </div>
 
-    <div class="home-badges">
-      <span class="home-badge">Márgenes por cultivo</span>
-      <span class="home-badge">Decisión de siembra</span>
-      <span class="home-badge">Cobertura de precios</span>
-      <span class="home-badge">Sensibilidad y riesgo</span>
-    </div>
-
-    <!-- MODULES SECTION -->
-    <div style="margin-bottom:24px">
-      <div class="home-modules-label">Módulos de Análisis Incluidos</div>
-      <div class="home-modules">
-        <div class="home-module">
-          <span class="home-module-icon">🌱</span>
-          <h5>Decisión de Siembra</h5>
-          <p>Ranking automático de cultivos y simulador de asignación de hectáreas</p>
-        </div>
-        <div class="home-module">
-          <span class="home-module-icon">⚖️</span>
-          <h5>Punto de Equilibrio</h5>
-          <p>Dónde empieza a dar ganancia cada cultivo según precios y costos</p>
-        </div>
-        <div class="home-module">
-          <span class="home-module-icon">🏆</span>
-          <h5>Bonificaciones</h5>
-          <p>Calculadora de ajustes de precio por calidad (Trigo, Girasol)</p>
-        </div>
-        <div class="home-module">
-          <span class="home-module-icon">📈</span>
-          <h5>Cobertura de Precios</h5>
-          <p>Análisis de protección de rentabilidad ante variaciones de precio</p>
-        </div>
-        <div class="home-module">
-          <span class="home-module-icon">📊</span>
-          <h5>Sensibilidad</h5>
-          <p>Tablas de impacto: cómo afectan precios y rendimientos al resultado</p>
-        </div>
-        <div class="home-module">
-          <span class="home-module-icon">📺</span>
-          <h5>Modo Presentación</h5>
-          <p>Compartir análisis profesional sin clics accidentales</p>
-        </div>
+    <div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(280px, 1fr)); gap: 24px; margin-bottom: 40px;">
+      <div style="border: 1px solid var(--line); border-radius: var(--radius-md); padding: 24px; background: var(--surface); box-shadow: var(--shadow-sm);">
+        <div style="font-size: 28px; margin-bottom: 16px;">🔍</div>
+        <h3 style="font-size: 16px; font-weight: 700; color: var(--ink); margin-bottom: 8px;">Simulación Dinámica</h3>
+        <p style="font-size: 13px; color: var(--ink-soft); line-height: 1.5;">Ajuste rendimientos, precios BCR actualizados y costos operativos para visualizar el Margen Bruto y Resultado Económico en tiempo real.</p>
+      </div>
+      <div style="border: 1px solid var(--line); border-radius: var(--radius-md); padding: 24px; background: var(--surface); box-shadow: var(--shadow-sm);">
+        <div style="font-size: 28px; margin-bottom: 16px;">📉</div>
+        <h3 style="font-size: 16px; font-weight: 700; color: var(--ink); margin-bottom: 8px;">Gestión de Riesgo</h3>
+        <p style="font-size: 13px; color: var(--ink-soft); line-height: 1.5;">Mida el impacto de fluctuaciones de mercado y modele escenarios de ventas forward para asegurar la rentabilidad del ciclo agrícola.</p>
+      </div>
+      <div style="border: 1px solid var(--line); border-radius: var(--radius-md); padding: 24px; background: var(--surface); box-shadow: var(--shadow-sm);">
+        <div style="font-size: 28px; margin-bottom: 16px;">💾</div>
+        <h3 style="font-size: 16px; font-weight: 700; color: var(--ink); margin-bottom: 8px;">Persistencia Local</h3>
+        <p style="font-size: 13px; color: var(--ink-soft); line-height: 1.5;">Guarde múltiples escenarios en su navegador y recupérelos instantáneamente para comparar estrategias o campos diferentes.</p>
       </div>
     </div>
 
-    <!-- CROPS SECTION -->
-    <div style="margin-bottom:24px">
-      <div class="home-crops-label">Cultivos y Secuencias Soportadas</div>
-      <div class="home-crops">
-        <div class="home-crop">
-          <div class="home-crop-name">Soja 1°</div>
-        </div>
-        <div class="home-crop">
-          <div class="home-crop-name">Trigo + Soja 2°</div>
-        </div>
-        <div class="home-crop">
-          <div class="home-crop-name">Trigo</div>
-        </div>
-        <div class="home-crop">
-          <div class="home-crop-name">Maíz Temprano</div>
-        </div>
-        <div class="home-crop">
-          <div class="home-crop-name">Maíz Tardío</div>
-        </div>
-        <div class="home-crop">
-          <div class="home-crop-name">Sorgo</div>
-        </div>
-        <div class="home-crop">
-          <div class="home-crop-name">Girasol</div>
-        </div>
+    <div style="background: var(--brand-light); border-left: 4px solid var(--brand); padding: 24px; border-radius: var(--radius-md); display: flex; justify-content: space-between; align-items: center; flex-wrap: wrap; gap: 20px;">
+      <div>
+        <h4 style="color: var(--brand-dark); font-size: 16px; font-weight: 700; margin-bottom: 6px;">Comience su planificación 26/27</h4>
+        <p style="color: var(--brand); font-size: 13px; margin: 0;">Seleccione su zona y configure su estructura de costos inicial.</p>
       </div>
-    </div>
-
-    <!-- USECASES SECTION -->
-    <div style="margin-bottom:20px">
-      <div class="home-usecases-label">Casos de Uso Principales</div>
-      <div class="home-usecases">
-        <div class="home-usecase">
-          <span class="home-usecase-icon">👨‍🌾</span>
-          <h5>Productores</h5>
-          <p>Planificación por lote: elegí qué sembrar comparando rentabilidad en tu zona con tus costos.</p>
-        </div>
-        <div class="home-usecase">
-          <span class="home-usecase-icon">👔</span>
-          <h5>Asesores</h5>
-          <p>Presentá escenarios al cliente con reportes PDF y Excel profesionales, genera confianza.</p>
-        </div>
-        <div class="home-usecase">
-          <span class="home-usecase-icon">📊</span>
-          <h5>Equipos Comerciales</h5>
-          <p>Analiza riesgo-rentabilidad de cada cultivo y arma estrategias de cobertura informadas.</p>
-        </div>
-      </div>
-    </div>
-
-    <div class="home-audience">
-      <div class="home-panel">
-        <h4>Diseñada para trabajo real en campo</h4>
-        <p>AGROMARGEN está pensada para productores, asesores e ingenieros que necesitan pasar de números sueltos a decisiones concretas de siembra y comercialización.</p>
-      </div>
-      <div class="home-panel">
-        <h4>¿Para quién es útil?</h4>
-        <div class="home-list">
-          <span>Productores que planifican por lote o establecimiento</span>
-          <span>Asesores que presentan escenarios al cliente</span>
-          <span>Equipos comerciales que comparan riesgo/rentabilidad</span>
-        </div>
-      </div>
-    </div>
-
-    <div class="home-grid">
-      <div class="home-box"><h4>Planificación productiva</h4><p>Compará escenarios y encontrá la mejor combinación de cultivos según tu zona y tu estructura de costos.</p></div>
-      <div class="home-box"><h4>Decisión comercial</h4><p>Medí impacto de precios, cobertura y punto de equilibrio para decidir con datos y no por intuición.</p></div>
-      <div class="home-box"><h4>Presentación profesional</h4><p>Generá resultados claros para reuniones con productores, asesores, socios o directorio.</p></div>
-    </div>
-    <div class="home-cta">
-      <span>Comenzá cargando tu departamento y personalizando costos para reflejar tu realidad productiva.</span>
-      <button class="btn blue" onclick="enterTool()">Ingresar a la herramienta</button>
+      <button class="btn" onclick="enterTool()" style="background: var(--brand); color: white; padding: 12px 28px; font-size: 14px; border: none; border-radius: 8px; font-weight: 700; cursor: pointer; box-shadow: var(--shadow-sm);">Abrir Simulador</button>
     </div>
   </div>
 </div>
 
-<div class="wrap" id="appShell" style="display:none">
+<div id="appShell" class="dashboard-layout" style="display:none">
+  <!-- SIDEBAR -->
+  <aside class="sidebar">
+    <div class="sidebar-header">
+      <div class="sidebar-logo"><span class="sidebar-logo-icon">📊</span> AGROMARGEN</div>
+      <div class="sidebar-subtitle">Planificación Agrícola 2026/27</div>
+    </div>
+    <nav class="sidebar-nav">
+      <button class="nav-item active" onclick="switchTab('tab-inicio')" id="nav-inicio"><span class="nav-item-icon">🏠</span> Inicio & Datos</button>
+      <button class="nav-item" onclick="switchTab('tab-dec')" id="nav-dec"><span class="nav-item-icon">🌱</span> Decisión de Siembra</button>
+      <button class="nav-item" onclick="switchTab('tab-be')" id="nav-be"><span class="nav-item-icon">⚖️</span> Punto de Equilibrio</button>
+      <button class="nav-item" onclick="switchTab('tab-qual')" id="nav-qual"><span class="nav-item-icon">🏆</span> Bonificaciones</button>
+      <button class="nav-item" onclick="switchTab('tab-cob')" id="nav-cob"><span class="nav-item-icon">📈</span> Cobertura</button>
+      <button class="nav-item" onclick="switchTab('tab-sens')" id="nav-sens"><span class="nav-item-icon">📊</span> Sensibilidad</button>
+    </nav>
+    <div class="sidebar-footer">
+      <div class="producer-chip" id="hdrProducer" style="color:var(--ink-soft);font-weight:700;font-size:10px;margin-bottom:8px;padding:4px 10px;background:var(--line-soft);border-radius:6px;border:1px solid var(--line)">Productor: no definido</div>
+      <div style="display:flex;gap:6px;flex-wrap:wrap;margin-bottom:10px">
+        <button class="btn" onclick="openSaveScenarioModal()" style="font-size:10px;padding:6px 10px;flex:1;background:var(--surface);border:1px solid var(--line);color:var(--ink-soft)">💾 Guardar</button>
+        <button class="btn" onclick="openLoadScenarioModal()" style="font-size:10px;padding:6px 10px;flex:1;background:var(--surface);border:1px solid var(--line);color:var(--ink-soft)">📂 Cargar</button>
+      </div>
+      <div style="border-top:1px solid var(--line); padding-top:10px;">
+        <span style="font-size:9px; font-weight:800; color:var(--ink-muted); display:block; margin-bottom:6px; text-transform:uppercase; letter-spacing:0.5px">Exportar Análisis</span>
+        <div style="display:flex;flex-direction:column;gap:4px">
+          <button class="btn green" onclick="exportExcel()" style="font-size:10px; justify-content:flex-start; width:100%; padding:6px 10px;">📥 Excel (Todos los datos)</button>
+          <button class="btn orange" onclick="openPDFModal()" style="font-size:10px; justify-content:flex-start; width:100%; padding:6px 10px;">📄 PDF (Informe Ejecutivo)</button>
+          <button class="btn" onclick="openCropSheetModal()" style="font-size:10px; justify-content:flex-start; width:100%; border:1px solid var(--line); background:var(--surface); color:var(--ink-soft); padding:6px 10px;">🧾 PDF (Ficha Cultivo)</button>
+        </div>
+      </div>
+      <div style="margin-top:10px;">
+         <button class="btn" onclick="goHome()" style="font-size:10px;padding:6px 10px;width:100%;background:var(--surface);border:1px solid var(--line);color:var(--ink-soft)">← Volver al Inicio</button>
+      </div>
+    </div>
+  </aside>
+  <!-- MAIN CONTENT -->
+  <main class="main-content">
+    <header class="topbar-dash">
+      <div style="display:flex;gap:12px;align-items:center;flex-wrap:wrap">
+        <button onclick="toggleSidebar()" class="btn" style="background:var(--surface-app);border:1px solid var(--line);border-radius:6px;padding:6px 10px;cursor:pointer;color:var(--ink-soft);display:flex;align-items:center;justify-content:center;font-size:16px;box-shadow:var(--shadow-sm)" title="Alternar panel lateral">☰</button>
+        <div>
+          <label style="font-size:11px;color:var(--ink-muted);font-weight:700;display:block;margin-bottom:2px">Departamento</label>
+          <select id="deptSel" style="padding:6px 10px;border-radius:6px;border:1px solid var(--line);font-size:12px;font-weight:600;min-width:180px;"></select>
+        </div>
+        <div>
+          <label style="font-size:11px;color:var(--ink-muted);font-weight:700;display:block;margin-bottom:2px">Productor / Establecimiento</label>
+          <input id="producerInput" type="text" class="prod-input" placeholder="Ej: Los Alamos" oninput="setProducerName(this.value)" style="padding:6px 10px;border-radius:6px;border:1px solid var(--line);font-size:12px;font-weight:600;width:200px;">
+        </div>
+      </div>
+      <div style="display:flex;gap:8px">
+        <button class="btn" onclick="openAdv()" style="font-size:11px;padding:8px 12px;background:#f8fafc;border:1px solid #cbd5e1;color:#334155;border-radius:6px">⚙️ Mis Costos</button>
+        <button class="btn" onclick="fetchBCRPrices()" id="btnRefreshPrices" style="font-size:11px;padding:8px 12px;background:#f8fafc;border:1px solid #cbd5e1;color:#334155;border-radius:6px">🌐 Precios BCR</button>
+        <button class="btn" onclick="resetScenarioBase()" style="font-size:11px;padding:8px 12px;background:#fef2f2;border:1px solid #fca5a5;color:#b91c1c;border-radius:6px">↺ Reset</button>
+      </div>
+    </header>
+    <div class="content-wrapper">
+      <!-- INICIO TAB -->
+      <section id="tab-inicio" class="tab-pane active">
 
-<div class="print-title" id="printTitle">AGROMARGEN — Campaña 2026/2027</div>
 
-<div class="hdr">
-  <div class="logo-box">AGRO<br>2026/27</div>
-  <div class="hdr-info">
-    <h1>AGROMARGEN — Planificación Agrícola</h1>
-    <p>Herramienta profesional de análisis económico por cultivo · Campaña 2026/2027</p>
-  </div>
-  <div class="hdr-meta">
-    <div class="producer-chip" id="hdrProducer">Productor: no definido</div>
-  </div>
-</div>
-
-<div class="topbar" style="display:grid;grid-template-columns:1fr 1fr;gap:10px;align-items:start">
-  <div style="display:flex;gap:8px;align-items:center;flex-wrap:wrap">
-    <label>Departamento:</label>
-    <select id="deptSel"></select>
-    <label>Productor:</label>
-    <input id="producerInput" type="text" class="prod-input" placeholder="Ej: Establecimiento Los Alamos" oninput="setProducerName(this.value)">
-  </div>
-  <div style="display:flex;gap:6px;flex-wrap:wrap;justify-content:flex-end">
-    <button class="btn blue" onclick="fetchBCRPrices()" id="btnRefreshPrices" style="font-size:10px;padding:6px 10px">🌐 Precios BCR</button>
-    <button class="btn" onclick="goHome()" style="font-size:10px;padding:6px 10px">🏠 Inicio</button>
-    <button class="btn red" onclick="resetScenarioBase()" style="font-size:10px;padding:6px 10px">↺ Esc. Base</button>
-    <button class="btn blue present-hide" onclick="openAdv()" style="font-size:10px;padding:6px 10px">✏️ Costos</button>
-    <button class="btn" onclick="openSaveScenarioModal()" style="font-size:10px;padding:6px 10px">💾 Guardar</button>
-    <button class="btn" onclick="openLoadScenarioModal()" style="font-size:10px;padding:6px 10px">📂 Cargar</button>
-  </div>
-</div>
-
-<div class="topbar" style="padding:8px 14px;background:#f1f5f9;border-bottom:1px solid #dde">
-  <div style="display:flex;gap:6px;flex-wrap:wrap;align-items:center">
-    <span style="font-size:10px;color:#666;font-weight:700;margin-right:4px;letter-spacing:.5px;text-transform:uppercase">Análisis:</span>
-    <button class="btn emerald" onclick="toggleDec()" style="font-size:10px;padding:6px 12px;border-radius:8px">🌱 Decisión Siembra</button>
-    <button class="btn amber" onclick="toggleBE()" style="font-size:10px;padding:6px 12px;border-radius:8px">⚖️ Punto Equilibrio</button>
-    <button class="btn cyan present-hide" onclick="toggleQual()" style="font-size:10px;padding:6px 12px;border-radius:8px">🏆 Bonificaciones</button>
-    <button class="btn violet present-hide" onclick="toggleCob()" style="font-size:10px;padding:6px 12px;border-radius:8px">📈 Cobertura</button>
-    <button class="btn present-hide" onclick="toggleSens()" style="font-size:10px;padding:6px 12px;border-radius:8px">📊 Sensibilidad</button>
-  </div>
-  <div style="display:flex;gap:6px">
-    <button class="btn" id="btnPresentation" onclick="togglePresentationMode()" style="font-size:10px;padding:6px 12px;border-radius:8px">📺 Presentación</button>
-  </div>
-</div>
-
-<div class="note">Podés modificar los datos en <span class="pill">celeste</span> — rendimientos y precios disponibles directamente en la tabla</div>
+<div class="note" style="border-radius:8px;margin-bottom:16px;">Podés modificar los datos en <span class="pill">celeste</span> — rendimientos y precios disponibles directamente en la tabla</div>
 
 <div class="ux-strip">
   <div class="ux-steps">
@@ -636,7 +742,7 @@ table.ct td.cedit:focus-within{background:#9dd8f9}
   <div class="sum-grid">
     <div class="sum-card">
       <h4>Distribución de costos por cultivo/secuencia (%)</h4>
-      <div style="position:relative;height:280px"><canvas id="sumCostChart" role="img" aria-label="Distribución porcentual de costos por cultivo"></canvas></div>
+      <div style="position:relative;height:280px;width:100%;min-width:0"><canvas id="sumCostChart" role="img" aria-label="Distribución porcentual de costos por cultivo"></canvas></div>
     </div>
     <div class="sum-card">
       <h4>Rentabilidad de la actividad (%)</h4>
@@ -644,80 +750,15 @@ table.ct td.cedit:focus-within{background:#9dd8f9}
         <button id="sumBtnPct" class="active" onclick="setSummaryMetric('pct')">%</button>
         <button id="sumBtnUsd" onclick="setSummaryMetric('usd')">USD/ha</button>
       </div>
-      <div style="position:relative;height:280px"><canvas id="sumRentChart" role="img" aria-label="Rentabilidad porcentual por cultivo"></canvas></div>
+      <div style="position:relative;height:280px;width:100%;min-width:0"><canvas id="sumRentChart" role="img" aria-label="Rentabilidad porcentual por cultivo"></canvas></div>
     </div>
   </div>
 </div>
 
-<!-- QUALITY BONIFICATIONS PANEL -->
-<div id="qualPanel">
-<div style="border-top:3px solid #0369a1;background:#f0f9ff;padding:16px">
-  <div style="display:flex;align-items:center;gap:12px;margin-bottom:14px;flex-wrap:wrap">
-    <div style="background:#0369a1;color:#fff;border-radius:6px;padding:5px 14px;font-weight:700;font-size:13px">🏆 Calculadora de Bonificaciones por Calidad</div>
-    <button class="btn" style="padding:4px 10px;font-size:10px;background:#fff;border:1px solid #0369a1;color:#0369a1" onclick="toggleHelpQual()">❓ ¿Qué es esto?</button>
-  </div>
-
-  <div id="helpQual" style="display:none;background:#fff;border:1px solid #ddd;border-radius:8px;padding:16px;margin-bottom:14px;box-shadow:var(--shadow);animation:scaleIn 0.3s ease-out">
-    <div style="font-size:14px;font-weight:800;color:#0369a1;margin-bottom:10px;display:flex;align-items:center;gap:8px">📚 Guía: Bonificaciones por Calidad <span style="font-size:10px;font-weight:400;opacity:.6">— Explicación Simple</span></div>
-    
-    <div style="font-size:12px;color:#444;line-height:1.6;margin-bottom:14px">
-      <strong style="color:#0369a1">¿Qué son las bonificaciones?</strong><br>
-      Cuando vendés tu grano, el precio no es fijo. Se ajusta según la <em>calidad</em> que entregás. Los cálculos están basados en la normativa vigente de comercialización (Normas XX, XXI, XII de la Bolsa de Comercio de Rosario).
-    </div>
-
-    <div style="display:grid;gap:10px">
-      <div style="background:#f0f9ff;border-left:3px solid #0369a1;padding:8px 10px;border-radius:0 6px 6px 0">
-        <div style="font-size:11px;font-weight:700;color:#0369a1;margin-bottom:3px">1️⃣ Precio base (referencia)</div>
-        <div style="font-size:11px;color:#555">Es el precio disponible del mercado (pizarra Rosario / BCR). Es el punto de partida antes de aplicar ajustes de calidad.</div>
-      </div>
-      
-      <div style="background:#f0f9ff;border-left:3px solid #0369a1;padding:8px 10px;border-radius:0 6px 6px 0">
-        <div style="font-size:11px;font-weight:700;color:#0369a1;margin-bottom:3px">2️⃣ Penalizaciones (rebajas)</div>
-        <div style="font-size:11px;color:#555">Si tu grano no cumple los estándares base, te descuentan: humedad excesiva, granos dañados, impurezas, etc. Cada parámetro tiene su tabla de descuento según normativa.</div>
-      </div>
-      
-      <div style="background:#f0f9ff;border-left:3px solid #0369a1;padding:8px 10px;border-radius:0 6px 6px 0">
-        <div style="font-size:11px;font-weight:700;color:#0369a1;margin-bottom:3px">3️⃣ Bonificaciones (plus)</div>
-        <div style="font-size:11px;color:#555">Si tu grano supera la base, cobrás un plus. Ejemplo: trigo con proteína >11% o girasol con aceite >42%. El plus puede mejorar significativamente tu margen.</div>
-      </div>
-      
-      <div style="background:#f0f9ff;border-left:3px solid #0369a1;padding:8px 10px;border-radius:0 6px 6px 0">
-        <div style="font-size:11px;font-weight:700;color:#0369a1;margin-bottom:3px">4️⃣ Precio final ajustado</div>
-        <div style="font-size:11px;color:#555">Es el precio que realmente cobrás: precio base − rebajas + bonificaciones. Este valor se puede trasladar automáticamente a la calculadora de márgenes para ver el impacto real en tu resultado económico.</div>
-      </div>
-    </div>
-
-    <div style="margin-top:14px;padding:10px;background:#e8f5e9;border-radius:6px;border:1px solid #a5d6a7">
-      <div style="font-size:11px;font-weight:700;color:#2e7d32;margin-bottom:4px">💡 Cómo usar esta herramienta:</div>
-      <ol style="font-size:11px;color:#444;padding-left:16px;line-height:1.5">
-        <li>Seleccioná el cultivo (Trigo o Girasol)</li>
-        <li>Ingresá los parámetros de calidad: humedad, proteína, peso hectolítrico, etc.</li>
-        <li>La herramienta aplica las tablas de descuento/bonificación automáticamente</li>
-        <li>Revisá el precio final ajustado y el desglose de cada descuento o plus</li>
-      </ol>
-    </div>
-
-    <button class="btn" style="margin-top:10px;padding:6px 12px;font-size:11px" onclick="toggleHelpQual()">✓ Entendido</button>
-  </div>
-
-  <div style="display:flex;gap:8px;margin-bottom:16px;flex-wrap:wrap;align-items:center">
-    <button id="qtab_tr" onclick="setQualCrop('tr')"
-      style="padding:7px 22px;font-size:12px;border-radius:6px;border:2px solid #1f5c2e;background:#1f5c2e;color:#fff;cursor:pointer;font-family:Arial,sans-serif;font-weight:700">
-      🌾 Trigo Pan
-    </button>
-    <button id="qtab_gir" onclick="setQualCrop('gir')"
-      style="padding:7px 22px;font-size:12px;border-radius:6px;border:2px solid #d4a017;background:#fff;color:#92400e;cursor:pointer;font-family:Arial,sans-serif;font-weight:700">
-      🌻 Girasol
-    </button>
-    <div style="margin-left:auto;font-size:10px;color:#0c4a6e;font-style:italic">
-      Res. SAGPyA 1262/04 (Trigo) · NORMA IX (Girasol) · Cámara Arbitral de Cereales — BCR
-    </div>
-  </div>
-  <div id="qualContent"></div>
-</div>
-</div>
-
-<div id="decPanel">
+</section>
+<!-- DECISION TAB -->
+<section id="tab-dec" class="tab-pane">
+<div id="decPanel" class="open">
 
   <!-- HEADER -->
   <div style="display:flex;align-items:center;gap:12px;margin-bottom:14px;flex-wrap:wrap">
@@ -781,7 +822,7 @@ table.ct td.cedit:focus-within{background:#9dd8f9}
   </div>
 
   <!-- RANKING TABLE + CHART side by side -->
-  <div style="display:grid;grid-template-columns:1fr 1fr;gap:14px;margin-bottom:16px">
+  <div style="display:grid;grid-template-columns:1fr 1fr;gap:14px;margin-bottom:16px;min-width:0">
     <div>
       <div style="font-size:11px;font-weight:700;color:#0e7c5a;margin-bottom:6px">Ranking de cultivos — condiciones actuales</div>
       <div style="overflow-x:auto">
@@ -790,7 +831,7 @@ table.ct td.cedit:focus-within{background:#9dd8f9}
     </div>
     <div>
       <div style="font-size:11px;font-weight:700;color:#0e7c5a;margin-bottom:6px">Resultado Económico (USD/ha) — comparativo</div>
-      <div style="position:relative;height:220px"><canvas id="decChart" role="img" aria-label="Gráfico de resultado económico por cultivo"></canvas></div>
+      <div style="position:relative;height:220px;width:100%;min-width:0"><canvas id="decChart" role="img" aria-label="Gráfico de resultado económico por cultivo"></canvas></div>
     </div>
   </div>
 
@@ -846,10 +887,10 @@ table.ct td.cedit:focus-within{background:#9dd8f9}
   </div>
 
 </div>
-</div>
-
-<!-- BREAK-EVEN PANEL -->
-<div id="bePanel">
+</section>
+<!-- PE TAB -->
+<section id="tab-be" class="tab-pane">
+<div id="bePanel" style="opacity:1;pointer-events:auto;" class="open">
 <div style="border-top:3px solid #b45309;background:#fffbeb;padding:16px">
 
   <!-- HEADER -->
@@ -943,7 +984,7 @@ table.ct td.cedit:focus-within{background:#9dd8f9}
   <!-- CHART -->
   <div style="background:#fff;border:1px solid #fcd34d;border-radius:8px;padding:14px;margin-bottom:14px">
     <div style="font-size:11px;font-weight:700;color:#92400e;margin-bottom:8px" id="beChartTitle">Curva de Resultado Económico en función del precio disponible</div>
-    <div style="position:relative;height:320px">
+    <div style="position:relative;height:320px;width:100%;min-width:0;">
       <canvas id="beChart" role="img" aria-label="Gráfico de punto de equilibrio dinámico"></canvas>
     </div>
     <div style="display:flex;gap:16px;flex-wrap:wrap;margin-top:8px;font-size:10px;color:#555">
@@ -957,7 +998,7 @@ table.ct td.cedit:focus-within{background:#9dd8f9}
   <!-- WATERFALL CHART -->
   <div style="background:#fff;border:1px solid #fcd34d;border-radius:8px;padding:14px;margin-bottom:14px">
     <div style="font-size:11px;font-weight:700;color:#92400e;margin-bottom:8px" id="beWaterfallTitle">💧 Descomposición del Resultado — ¿Dónde se va la plata?</div>
-    <div style="position:relative;height:260px"><canvas id="beWaterfallChart" role="img" aria-label="Gráfico cascada de descomposición de costos"></canvas></div>
+    <div style="position:relative;height:260px;width:100%;min-width:0;"><canvas id="beWaterfallChart" role="img" aria-label="Gráfico cascada de descomposición de costos"></canvas></div>
     <div style="font-size:9px;color:#888;margin-top:6px;text-align:center">Cada barra muestra cómo se reduce el ingreso total hasta llegar al resultado económico final</div>
   </div>
 
@@ -969,7 +1010,7 @@ table.ct td.cedit:focus-within{background:#9dd8f9}
       <span style="font-size:11px;color:#555;font-weight:700">vs</span>
       <select id="beDualCrop2" onchange="buildBEDualChart()" style="padding:4px 8px;border-radius:6px;border:1.5px solid #d97706;font-size:11px;font-weight:700;color:#92400e;background:#fff;cursor:pointer"></select>
     </div>
-    <div style="position:relative;height:280px"><canvas id="beDualChart" role="img" aria-label="Comparador dual de curvas de equilibrio"></canvas></div>
+    <div style="position:relative;height:280px;width:100%;min-width:0;"><canvas id="beDualChart" role="img" aria-label="Comparador dual de curvas de equilibrio"></canvas></div>
     <div id="beDualSummary" style="margin-top:10px"></div>
   </div>
 
@@ -998,8 +1039,10 @@ table.ct td.cedit:focus-within{background:#9dd8f9}
 
 </div>
 </div>
-
-<div id="cobPanel">
+</section>
+<!-- COB TAB -->
+<section id="tab-cob" class="tab-pane">
+<div id="cobPanel" style="opacity:1;pointer-events:auto;" class="open">
 <div style="border-top:3px solid #6d28d9;background:#faf5ff;padding:14px 16px">
   <div style="display:flex;align-items:center;gap:10px;margin-bottom:12px;flex-wrap:wrap">
     <div style="background:#6d28d9;color:#fff;border-radius:6px;padding:5px 12px;font-weight:700;font-size:12px">📈 Simulador de Cobertura de Precios — Futuros / Forwards</div>
@@ -1054,7 +1097,7 @@ table.ct td.cedit:focus-within{background:#9dd8f9}
   <table style="width:100%;border-collapse:collapse;font-size:12px;margin-bottom:14px" id="cobInputTable">
     <thead>
       <tr>
-        <th style="background:#6d28d9;color:#fff;padding:6px 8px;text-align:left;border:1px solid #7c3aed;min-width:200px">Concepto</th>
+        <th style="background:#6d28d9;color:#fff;padding:6px 8px;text-align:left;border:1px solid #7c3aed;">Concepto</th>
         <th style="background:#6d28d9;color:#fff;padding:6px 8px;border:1px solid #7c3aed;text-align:center">Soja 1°</th>
         <th style="background:#6d28d9;color:#fff;padding:6px 8px;border:1px solid #7c3aed;text-align:center">Trigo+Soja 2°</th>
         <th style="background:#4a1c8a;color:#fff;padding:6px 8px;border:1px solid #7c3aed;text-align:center">Trigo</th>
@@ -1078,8 +1121,10 @@ table.ct td.cedit:focus-within{background:#9dd8f9}
   </div>
 </div>
 </div>
-
-<div id="sensPanel">
+</section>
+<!-- SENS TAB -->
+<section id="tab-sens" class="tab-pane">
+<div id="sensPanel" style="opacity:1;pointer-events:auto;" class="open">
   <div class="spnl">
     <div class="sens-bar" style="flex-wrap:wrap;gap:10px;align-items:center">
       <span>Análisis de sensibilidad — 6 cultivos</span>
@@ -1138,13 +1183,89 @@ table.ct td.cedit:focus-within{background:#9dd8f9}
     <div class="sgrid" id="sgrid"></div>
   </div>
 </div>
+</section>
+<!-- BONIFICACIONES TAB -->
+<section id="tab-qual" class="tab-pane">
+<!-- QUALITY BONIFICATIONS PANEL -->
 
-<div class="export-bar" id="exportBar" style="display:none">
-  <span>Exportar:</span>
-  <button class="btn green" onclick="exportExcel()">📥 Guardar en Excel</button>
-  <button class="btn orange" onclick="openPDFModal()">📄 Exportar Informe PDF Profesional</button>
-  <button class="btn" onclick="openCropSheetModal()">🧾 Ficha por cultivo (PDF)</button>
+<div id="qualPanel" class="open">
+<div style="border-top:3px solid #0369a1;background:#f0f9ff;padding:16px">
+  <div style="display:flex;align-items:center;gap:12px;margin-bottom:14px;flex-wrap:wrap">
+    <div style="background:#0369a1;color:#fff;border-radius:6px;padding:5px 14px;font-weight:700;font-size:13px">🏆 Calculadora de Bonificaciones por Calidad</div>
+    <button class="btn" style="padding:4px 10px;font-size:10px;background:#fff;border:1px solid #0369a1;color:#0369a1" onclick="toggleHelpQual()">❓ ¿Qué es esto?</button>
+  </div>
+
+  <div id="helpQual" style="display:none;background:#fff;border:1px solid #ddd;border-radius:8px;padding:16px;margin-bottom:14px;box-shadow:var(--shadow);animation:scaleIn 0.3s ease-out">
+    <div style="font-size:14px;font-weight:800;color:#0369a1;margin-bottom:10px;display:flex;align-items:center;gap:8px">📚 Guía: Bonificaciones por Calidad <span style="font-size:10px;font-weight:400;opacity:.6">— Explicación Simple</span></div>
+    
+    <div style="font-size:12px;color:#444;line-height:1.6;margin-bottom:14px">
+      <strong style="color:#0369a1">¿Qué son las bonificaciones?</strong><br>
+      Cuando vendés tu grano, el precio no es fijo. Se ajusta según la <em>calidad</em> que entregás. Los cálculos están basados en la normativa vigente de comercialización (Normas XX, XXI, XII de la Bolsa de Comercio de Rosario).
+    </div>
+
+    <div style="display:grid;gap:10px">
+      <div style="background:#f0f9ff;border-left:3px solid #0369a1;padding:8px 10px;border-radius:0 6px 6px 0">
+        <div style="font-size:11px;font-weight:700;color:#0369a1;margin-bottom:3px">1️⃣ Precio base (referencia)</div>
+        <div style="font-size:11px;color:#555">Es el precio disponible del mercado (pizarra Rosario / BCR). Es el punto de partida antes de aplicar ajustes de calidad.</div>
+      </div>
+      
+      <div style="background:#f0f9ff;border-left:3px solid #0369a1;padding:8px 10px;border-radius:0 6px 6px 0">
+        <div style="font-size:11px;font-weight:700;color:#0369a1;margin-bottom:3px">2️⃣ Penalizaciones (rebajas)</div>
+        <div style="font-size:11px;color:#555">Si tu grano no cumple los estándares base, te descuentan: humedad excesiva, granos dañados, impurezas, etc. Cada parámetro tiene su tabla de descuento según normativa.</div>
+      </div>
+      
+      <div style="background:#f0f9ff;border-left:3px solid #0369a1;padding:8px 10px;border-radius:0 6px 6px 0">
+        <div style="font-size:11px;font-weight:700;color:#0369a1;margin-bottom:3px">3️⃣ Bonificaciones (plus)</div>
+        <div style="font-size:11px;color:#555">Si tu grano supera la base, cobrás un plus. Ejemplo: trigo con proteína >11% o girasol con aceite >42%. El plus puede mejorar significativamente tu margen.</div>
+      </div>
+      
+      <div style="background:#f0f9ff;border-left:3px solid #0369a1;padding:8px 10px;border-radius:0 6px 6px 0">
+        <div style="font-size:11px;font-weight:700;color:#0369a1;margin-bottom:3px">4️⃣ Precio final ajustado</div>
+        <div style="font-size:11px;color:#555">Es el precio que realmente cobrás: precio base − rebajas + bonificaciones. Este valor se puede trasladar automáticamente a la calculadora de márgenes para ver el impacto real en tu resultado económico.</div>
+      </div>
+    </div>
+
+    <div style="margin-top:14px;padding:10px;background:#e8f5e9;border-radius:6px;border:1px solid #a5d6a7">
+      <div style="font-size:11px;font-weight:700;color:#2e7d32;margin-bottom:4px">💡 Cómo usar esta herramienta:</div>
+      <ol style="font-size:11px;color:#444;padding-left:16px;line-height:1.5">
+        <li>Seleccioná el cultivo (Trigo o Girasol)</li>
+        <li>Ingresá los parámetros de calidad: humedad, proteína, peso hectolítrico, etc.</li>
+        <li>La herramienta aplica las tablas de descuento/bonificación automáticamente</li>
+        <li>Revisá el precio final ajustado y el desglose de cada descuento o plus</li>
+      </ol>
+    </div>
+
+    <button class="btn" style="margin-top:10px;padding:6px 12px;font-size:11px" onclick="toggleHelpQual()">✓ Entendido</button>
+  </div>
+
+  <div style="display:flex;gap:8px;margin-bottom:16px;flex-wrap:wrap;align-items:center">
+    <button id="qtab_tr" onclick="setQualCrop('tr')"
+      style="padding:7px 22px;font-size:12px;border-radius:6px;border:2px solid #1f5c2e;background:#1f5c2e;color:#fff;cursor:pointer;font-family:Arial,sans-serif;font-weight:700">
+      🌾 Trigo Pan
+    </button>
+    <button id="qtab_gir" onclick="setQualCrop('gir')"
+      style="padding:7px 22px;font-size:12px;border-radius:6px;border:2px solid #d4a017;background:#fff;color:#92400e;cursor:pointer;font-family:Arial,sans-serif;font-weight:700">
+      🌻 Girasol
+    </button>
+    <div style="margin-left:auto;font-size:10px;color:#0c4a6e;font-style:italic">
+      Res. SAGPyA 1262/04 (Trigo) · NORMA IX (Girasol) · Cámara Arbitral de Cereales — BCR
+    </div>
+  </div>
+  <div id="qualContent"></div>
 </div>
+</div>
+
+
+</div>
+
+<!-- BREAK-EVEN PANEL -->
+
+
+
+
+
+
+
 
 <div class="foot">
   <span>Datos actualizados quincenalmente · Precios FOB Rosario · contacto@agromargen.com</span>
@@ -1752,7 +1873,6 @@ function buildTable(res){
 let sumCostChart=null;
 let sumRentChart=null;
 let summaryMetric='pct';
-let presentationMode=false;
 const SUMMARY_CROPS=[
   {key:'s1',label:'Soja 1°',priceKey:'soja'},
   {key:'ts',label:'Trigo+Soja 2°',priceKey:null},
@@ -1772,16 +1892,9 @@ function setSummaryMetric(mode){
   buildSummaryCharts(compute());
 }
 
-function togglePresentationMode(){
-  presentationMode=!presentationMode;
-  document.body.classList.toggle('presentation-mode',presentationMode);
-  const btn=document.getElementById('btnPresentation');
-  if(btn) btn.textContent=presentationMode?'Salir presentación':'Modo presentación';
-}
-
 function buildSummaryCharts(res){
-  const labels=['Soja 1°','Trigo+Soja 2°','Trigo','Maíz Temp.','Maíz Tardío','Sorgo','Girasol'];
-  const rentLabels=['Soja 1°',['Trigo +','Soja 2°'],'Trigo',['Maíz','Temprano'],['Maíz','Tardío'],'Sorgo','Girasol'];
+  const labels=['Soja 1°',['Trigo+','Soja 2°'],'Trigo',['Maíz','Temp.'],['Maíz','Tardío'],'Sorgo','Girasol'];
+  const rentLabels=['Soja 1°',['Trigo+','Soja 2°'],'Trigo',['Maíz','Temp.'],['Maíz','Tardío'],'Sorgo','Girasol'];
   const V=[res.s1,res.ts,res.tr,res.mt,res.mtard,res.sor,res.gir];
   const totalCost=V.map(v=>Math.max(v.cd+v.GC+v.ci+v.Imp+v.inter,0.001));
   const asPct=(arr)=>arr.map((v,i)=>Math.round((v/totalCost[i])*1000)/10);
@@ -1823,7 +1936,7 @@ function buildSummaryCharts(res){
         }
       },
       scales:{
-        x:{stacked:true,ticks:{font:{size:10}}},
+        x:{stacked:true,ticks:{autoSkip:false,maxRotation:0,minRotation:0,font:{size:10}}},
         y:{stacked:true,max:100,ticks:{callback:v=>v+'%',font:{size:10}},grid:{color:'#edf2f7'}}
       }
     }
@@ -1890,6 +2003,7 @@ function buildSensBox(name,note,prs,rends,calcFn,curPr,curRend){
 }
 
 function buildSens(res){
+  if (!res) res = compute();
   const R=res.rend;
   let html='';
 
@@ -2070,6 +2184,10 @@ function reapplyArrReference(){
   });
 }
 
+function toggleSidebar() {
+  const sidebar = document.querySelector('.sidebar');
+  if (sidebar) sidebar.classList.toggle('collapsed');
+}
 function openAdv(){
   buildAdvModal();
   const m=document.getElementById('advModal');
@@ -2197,14 +2315,44 @@ function toggleHelpDec(){
   if(decHelpOpen){el.style.display='block';el.style.animation='scaleIn 0.3s ease-out';}
   else{el.style.animation='panelCollapse 0.2s ease-out';setTimeout(()=>{el.style.display='none';},180);}
 }
-function toggleDec(){
-  decOpen = !decOpen;
-  const el = document.getElementById('decPanel');
-  el.classList.toggle('open', decOpen);
-  if(decOpen){
-    buildDec();
-    setTimeout(() => el.scrollIntoView({behavior:'smooth',block:'start'}), 350);
-  }
+// --- DASHBOARD NAVIGATION ---
+const tabs = ['tab-inicio', 'tab-dec', 'tab-be', 'tab-qual', 'tab-cob', 'tab-sens'];
+function switchTab(tabId) {
+  document.querySelectorAll('.nav-item').forEach(el => el.classList.remove('active'));
+  const navItem = document.getElementById('nav-' + tabId.replace('tab-', ''));
+  if (navItem) navItem.classList.add('active');
+  tabs.forEach(id => {
+    const pnl = document.getElementById(id);
+    if(pnl) pnl.classList.remove('active');
+  });
+  const tPnl = document.getElementById(tabId);
+  if(tPnl) tPnl.classList.add('active');
+
+  // Ensure inner panels get .open class
+  const panelMap = {
+    'tab-dec': 'decPanel',
+    'tab-be': 'bePanel',
+    'tab-qual': 'qualPanel',
+    'tab-cob': 'cobPanel',
+    'tab-sens': 'sensPanel'
+  };
+  Object.entries(panelMap).forEach(([tab, panelId]) => {
+    const panel = document.getElementById(panelId);
+    if (panel) {
+      if (tab === tabId) panel.classList.add('open');
+      else panel.classList.remove('open');
+    }
+  });
+
+  if(tabId === 'tab-dec') { decOpen = true; buildDec(); } else { decOpen = false; }
+  if(tabId === 'tab-be') { beOpen = true; buildBE(); } else { beOpen = false; }
+  if(tabId === 'tab-qual') { qualOpen = true; buildQual(); } else { qualOpen = false; }
+  if(tabId === 'tab-cob') { cobOpen = true; buildCob(); } else { cobOpen = false; }
+  if(tabId === 'tab-sens') { sensOpen = true; buildSens(); } else { sensOpen = false; }
+  // Scroll main content area to top
+  const mainContent = document.querySelector('.main-content');
+  if (mainContent) mainContent.scrollTop = 0;
+  else window.scrollTo(0, 0);
 }
 
 function onHasChange(){
@@ -2276,7 +2424,12 @@ function buildDec(){
 function buildDecChart(ranked){
   const canvas=document.getElementById('decChart');
   if(decChart){decChart.destroy();decChart=null;}
-  const labels=ranked.map(c=>c.label);
+  const labels=ranked.map(c=>{
+    if(c.label==='Trigo+Soja 2°') return ['Trigo+','Soja 2°'];
+    if(c.label==='Maíz Tardío') return ['Maíz','Tardío'];
+    if(c.label==='Maíz Temp.') return ['Maíz','Temp.'];
+    return c.label;
+  });
   const data=ranked.map(c=>Math.round(c.RE*100)/100);
   const colors=data.map(v=>v>=0?'#0e7c5a':'#dc2626');
   decChart=new Chart(canvas,{
@@ -2298,7 +2451,7 @@ function buildDecChart(ranked){
       plugins:{legend:{display:false},
         tooltip:{callbacks:{label:ctx=>`USD ${ctx.parsed.y.toLocaleString('es-AR',{minimumFractionDigits:2})}/ha`}}},
       scales:{
-        x:{grid:{display:false},ticks:{font:{size:10},color:'#333'}},
+        x:{grid:{display:false},ticks:{autoSkip:false,maxRotation:0,minRotation:0,font:{size:9},color:'#333'}},
         y:{grid:{color:'#e5e7eb'},ticks:{font:{size:10},
           callback:v=>'$'+Math.round(v)},
           title:{display:true,text:'USD/ha',font:{size:10},color:'#555'}}
@@ -2910,7 +3063,7 @@ function buildBEWaterfall(v,c){
         }
       },
       scales:{
-        x:{ticks:{font:{size:9,weight:'bold'},color:'#555',maxRotation:0},grid:{display:false}},
+        x:{ticks:{autoSkip:false,font:{size:9,weight:'bold'},color:'#555',maxRotation:0,minRotation:0},grid:{display:false}},
         y:{
           ticks:{font:{size:10},color:'#555',callback:v=>'USD '+Math.round(v)},
           grid:{color:'#f3f4f6'},
@@ -3165,7 +3318,7 @@ function buildCobResults(res){
   });
 
   document.getElementById('cobResHead').innerHTML=`<tr>
-    <th style="background:#4c1d95;color:#fff;padding:6px 8px;text-align:left;border:1px solid #7c3aed;min-width:180px">Indicador</th>
+    <th style="background:#4c1d95;color:#fff;padding:6px 8px;text-align:left;border:1px solid #7c3aed;">Indicador</th>
     ${cropKeys.map((_,i)=>`
       <th style="background:#4c1d95;color:#fff;padding:4px 4px;border:1px solid #7c3aed;font-size:10px;text-align:center" colspan="2">${['Soja 1°','Trigo+Soja 2°','Trigo','Maíz Temp.','Maíz Tardío','Sorgo','Girasol'][i]}</th>
     `).join('')}
@@ -3292,15 +3445,7 @@ function resetQualityState(){
   qualCrop='tr';
 }
 
-function toggleQual(){
-  qualOpen = !qualOpen;
-  const el = document.getElementById('qualPanel');
-  el.classList.toggle('open', qualOpen);
-  if(qualOpen){
-    buildQual();
-    setTimeout(() => el.scrollIntoView({behavior:'smooth',block:'start'}), 350);
-  }
-}
+function toggleQual(){ switchTab("tab-qual"); }
 function setQualCrop(crop){
   qualCrop=crop;
   // Update tab styles
@@ -4612,25 +4757,20 @@ function exportExcel(){
 function enterTool(){
   const home=document.getElementById('homeScreen');
   const app=document.getElementById('appShell');
-  const exportBar=document.getElementById('exportBar');
   document.body.classList.remove('home-active');
   document.body.classList.add('tool-active');
   if(home) home.style.display='none';
   if(app) app.style.display='block';
-  if(exportBar) exportBar.style.display='flex';
   window.scrollTo(0,0);
 }
 
 function goHome(){
   const home=document.getElementById('homeScreen');
   const app=document.getElementById('appShell');
-  const exportBar=document.getElementById('exportBar');
-  if(presentationMode){togglePresentationMode();}
   document.body.classList.remove('tool-active');
   document.body.classList.add('home-active');
   if(app) app.style.display='none';
   if(home) home.style.display='block';
-  if(exportBar) exportBar.style.display='none';
   window.scrollTo(0,0);
 }
 
@@ -4640,10 +4780,8 @@ function init(){
   document.body.classList.add('home-active');
   const home=document.getElementById('homeScreen');
   const app=document.getElementById('appShell');
-  const exportBar=document.getElementById('exportBar');
   if(home) home.style.display='block';
   if(app) app.style.display='none';
-  if(exportBar) exportBar.style.display='none';
   const sel=document.getElementById('deptSel');
   setProducerName('');
   setEstabName('');
@@ -4671,9 +4809,6 @@ function init(){
       closePDFModal();
       closeAdv();
       document.querySelectorAll('.modal-bg.show').forEach(m=>m.classList.remove('show'));
-      document.querySelectorAll('#decPanel.open,#bePanel.open,#cobPanel.open,#qualPanel.open,#sensPanel.open').forEach(p=>p.classList.remove('open'));
-      decOpen=beOpen=sensOpen=cobOpen=qualOpen=false;
-      window.scrollTo(0,0);
     }
   });
 }
